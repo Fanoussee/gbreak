@@ -31,7 +31,7 @@ connexion.connect(function (error) {
 
 //Requête pour obtenir tous les utilisateurs
 app.get("/api/utilisateurs", function (req, res) {
-    const sql = 'SELECT * FROM123 Utilisateur';
+    const sql = 'SELECT * FROM Utilisateur';
     connexion.query(sql, function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -62,16 +62,26 @@ app.get("/api/utilisateurs/:id", function (req, res) {
 });
 
 //Requête pour supprimer un utilisateur
-app.get("/api/utilisateurs/:id", function (req, res) {
-    const sql = 'DELETE FROM Utilisateur WHERE id_util=?';
+app.delete("/api/utilisateurs/:id", function (req, res) {
     const idUtil = req.params.id;
-    connexion.query(sql, [idUtil], function (err, rows, fields) {
+    const sql1 = 'SELECT id_util FROM Utilisateur WHERE id_util=?';
+    const sql2 = 'DELETE FROM Utilisateur WHERE id_util=?';
+    let idUserToDelete = 0;
+    connexion.query(sql1, [idUtil], function (err, rows, fields) {
         if (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ erreur: "La requête est incorrecte ! " });
+        } else {
+            try {
+                idUserToDelete = rows[0].ud_util;
+                connexion.query(sql2, [idUserToDelete], function (err, rows, fields) {
+                    res.status(200).json({ message: "Utilisateur supprimé !" });
+                });
+            } catch (error) {
+                res.status(500).json({ erreur: "La requête est incorrecte ou l'utilisateur n'existe pas !" });
+            }
         }
-        res.json({ message: "Utilisateur supprimé !" });
-    })
-})
+    });
+});
 
 //Se déconnecter à la base de données
 /*connexion.end(function(error){
