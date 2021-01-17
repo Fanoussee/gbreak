@@ -40,6 +40,18 @@ app.get("/api/utilisateurs", function(req, res){
     });
 });
 
+//Requête pour obtenir un utilisateur
+app.get("/api/utilisateurs/:id", function(req, res){
+    const sql = 'SELECT * FROM Utilisateur WHERE id_util=?';
+    const idUtil = req.params.id;
+    connexion.query(sql, [idUtil], function(err, rows, fields){
+        if(err){
+            res.status(500).json({ error : err.message });
+        }
+        res.json(rows);
+    });
+});
+
 //Se déconnecter à la base de données
 /*connexion.end(function(error){
     if(error){
