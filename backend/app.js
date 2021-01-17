@@ -21,6 +21,9 @@ app.use(bodyParser.json());
 const routesUtilisateurs = require("./routes/utilisateurs");
 app.use("/api/utilisateurs", routesUtilisateurs);
 
+const routesArticles = require("./routes/articles");
+app.use("/api/articles", routesArticles);
+
 //Se déconnecter à la base de données
 /*connexion.end(function(error){
     if(error){
