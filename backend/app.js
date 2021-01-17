@@ -101,11 +101,8 @@ app.put("/api/utilisateurs/:id", function (req, res) {
             res.status(500).json({ erreur: "La 1ère requête est incorrecte !" });
         } else {
             try {
-                //S'assurer que l'utilisteur existe
                 idUserToModify = rows[0].id_util;
                 if (idUserToModify == idUtil) {
-                    //Chercher quelles modifications ont été apportées
-                    //Modifier la ou les informations dans la base de données
                     connexion.query(sql2, [values, idUtil], function (err, rows, fields) {
                         if (err) {
                             res.status(500).json({ erreur: "La 2e requête est incorrecte !" });
@@ -116,6 +113,34 @@ app.put("/api/utilisateurs/:id", function (req, res) {
                 }
             } catch (error) {
                 res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
+            }
+        }
+    });
+});
+
+//Requête pour créer un utilisateur
+app.post("/api/utilisateurs", function (req, res) {
+    const values = req.body;
+    const sql1 = 'SELECT id_util FROM Utilisateur WHERE nom=? AND prenom=? AND date_naiss=?';
+    const sql2 = 'INSERT INTO Utilisateur (nom, prenom, date_naiss, mot_passe, moderateur) VALUES (?,?,?,?,?)';
+    connexion.query(sql1, [values.nom, values.prenom, values.date_naiss], function (err, rows, fields) {
+        if (err) {
+            res.status(500).json({ erreur: "La 1ere requête est incorrecte !" });
+        } else {
+            try {
+                if (rows[0].id_util > 0) {
+                    res.status(500).json({ erreur: "L'utilisateur existe déjà !" });
+                }
+            } catch (error) {
+                connexion.query(sql2,
+                    [values.nom, values.prenom, values.date_naiss, values.mot_passe, values.moderateur],
+                    function (err, rows, fields) {
+                        if (err) {
+                            res.status(500).json({ erreur: "La 2e requête est incorrecte !" });
+                        } else {
+                            res.status(200).json({ message: "Utilisateur créé !" });
+                        }
+                    });
             }
         }
     });
