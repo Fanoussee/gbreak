@@ -69,25 +69,56 @@ app.delete("/api/utilisateurs/:id", function (req, res) {
     let idUserToDelete = 0;
     connexion.query(sql1, [idUtil], function (err, rows, fields) {
         if (err) {
-            res.status(500).json({ erreur : "La requête est incorrecte !"});
+            res.status(500).json({ erreur: "La requête est incorrecte !" });
         } else {
             try {
                 idUserToDelete = rows[0].id_util;
-                if (idUserToDelete == idUtil){
+                if (idUserToDelete == idUtil) {
                     connexion.query(sql2, [idUtil], function (err, rows, fields) {
-                        if(err){
-                            res.status(500).json({ erreur : "La requête est incorrecte !"});
-                        }else{
+                        if (err) {
+                            res.status(500).json({ erreur: "La requête est incorrecte !" });
+                        } else {
                             res.status(200).json({ message: "Utilisateur supprimé !" });
                         }
                     });
                 }
             } catch (error) {
-                res.status(500).json({ erreur : "L'utilisateur n'existe pas !"});
+                res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
             }
         }
     });
-    
+});
+
+//Requête pour modifier un utilisateur
+app.put("/api/utilisateurs/:id", function (req, res) {
+    const idUtil = req.params.id;
+    const sql1 = 'SELECT * FROM Utilisateur WHERE id_util=?';
+    const sql2 = 'UPDATE Utilisateur SET ? WHERE id_util=?';
+    const values = req.body;
+    let idUserToModify = 0;
+    connexion.query(sql1, [idUtil], function (err, rows, fields) {
+        if (err) {
+            res.status(500).json({ erreur: "La 1ère requête est incorrecte !" });
+        } else {
+            try {
+                //S'assurer que l'utilisteur existe
+                idUserToModify = rows[0].id_util;
+                if (idUserToModify == idUtil) {
+                    //Chercher quelles modifications ont été apportées
+                    //Modifier la ou les informations dans la base de données
+                    connexion.query(sql2, [values, idUtil], function (err, rows, fields) {
+                        if (err) {
+                            res.status(500).json({ erreur: "La 2e requête est incorrecte !" });
+                        } else {
+                            res.status(200).json({ message: "Utilisateur modifié !" });
+                        }
+                    });
+                }
+            } catch (error) {
+                res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
+            }
+        }
+    });
 });
 
 //Se déconnecter à la base de données
