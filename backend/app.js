@@ -22,3 +22,5 @@ connexion.end(function(error){
     }
     console.log('Déconnecté du serveur MySQL.');
 });
+
+module.exports = app;
