@@ -31,12 +31,12 @@ connexion.connect(function (error) {
 
 //Requête pour obtenir tous les utilisateurs
 app.get("/api/utilisateurs", function (req, res) {
-    const sql = 'SELECT * FROM Utilisateur';
+    const sql = 'SELECT * FROM123 Utilisateur';
     connexion.query(sql, function (err, rows, fields) {
         if (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ erreur: "La requête est incorrecte !" });
         }
-        res.json(rows);
+        res.status(200).json(rows);
     });
 });
 
