@@ -64,23 +64,30 @@ app.get("/api/utilisateurs/:id", function (req, res) {
 //Requête pour supprimer un utilisateur
 app.delete("/api/utilisateurs/:id", function (req, res) {
     const idUtil = req.params.id;
-    const sql1 = 'SELECT id_util FROM Utilisateur WHERE id_util=?';
+    const sql1 = 'SELECT * FROM Utilisateur WHERE id_util=?';
     const sql2 = 'DELETE FROM Utilisateur WHERE id_util=?';
     let idUserToDelete = 0;
     connexion.query(sql1, [idUtil], function (err, rows, fields) {
         if (err) {
-            res.status(500).json({ erreur: "La requête est incorrecte ! " });
+            res.status(500).json({ erreur : "La requête est incorrecte !"});
         } else {
             try {
-                idUserToDelete = rows[0].ud_util;
-                connexion.query(sql2, [idUserToDelete], function (err, rows, fields) {
-                    res.status(200).json({ message: "Utilisateur supprimé !" });
-                });
+                idUserToDelete = rows[0].id_util;
+                if (idUserToDelete == idUtil){
+                    connexion.query(sql2, [idUtil], function (err, rows, fields) {
+                        if(err){
+                            res.status(500).json({ erreur : "La requête est incorrecte !"});
+                        }else{
+                            res.status(200).json({ message: "Utilisateur supprimé !" });
+                        }
+                    });
+                }
             } catch (error) {
-                res.status(500).json({ erreur: "La requête est incorrecte ou l'utilisateur n'existe pas !" });
+                res.status(500).json({ erreur : "L'utilisateur n'existe pas !"});
             }
         }
     });
+    
 });
 
 //Se déconnecter à la base de données
