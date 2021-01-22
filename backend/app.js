@@ -24,6 +24,9 @@ app.use("/api/utilisateurs", routesUtilisateurs);
 const routesArticles = require("./routes/articles");
 app.use("/api/articles", routesArticles);
 
+const routesCommentaires = require("./routes/commentaires");
+app.use("/api/commentaires", routesCommentaires);
+
 //Se déconnecter à la base de données
 /*connexion.end(function(error){
     if(error){
