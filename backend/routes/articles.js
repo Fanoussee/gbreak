@@ -8,5 +8,6 @@ router.get("/", ctrlArticles.getAllArticles);
 router.get("/:idArticle", ctrlArticles.getOneArticleWithId);
 router.get("/all/:idUtil", ctrlArticles.getAllArticlesForOneUser);
 router.delete("/:idArticle", ctrlArticles.deleteArticle);
+router.put("/:idArticle", ctrlArticles.modifyArticle);
 
 module.exports = router;
