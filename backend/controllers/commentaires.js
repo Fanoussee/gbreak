@@ -37,40 +37,42 @@ exports.createComment = function (req, res) {
     let result = 0;
     let nbCommentaires = 0;
     const dateCreation = new Date();
-    connexion.query(sql1, [idArticle], function (err, rows, fields) {
-        if (err) {
-            res.status(500).json({ erreur: "La requête 1 est incorrecte !" });
-        } else {
-            try {
-                result = rows[0].id_article;
-                nbCommentaires = rows[0].nb_commentaires;
-                connexion.query(sql2, [idArticle, values.id_util], function(err, rows, fields){
-                    if(err){
-                        res.status(500).json({ erreur: "La requête 2 est incorrecte !" });
-                    }else{
-                        if(rows.length == 0){
+    if (values.id_util != null && values.commentaire != null) {
+        connexion.query(sql1, [idArticle], function (err, rows, fields) {
+            if (err) {
+                res.status(500).json({ erreur: "La requête est incorrecte !" });
+            } else {
+                try {
+                    result = rows[0].id_article;
+                    console.log(result);
+                    nbCommentaires = rows[0].nb_commentaires;
+                    connexion.query(sql2, [idArticle, values.id_util], function (err, rows, fields) {
+                        if (err) {
+                            res.status(500).json({ erreur: "La requête est incorrecte !" });
+                        } else if (rows.length == 0) {
                             connexion.query(sql3, [idArticle, values.id_util, dateCreation, values.commentaire], function (err, rows, fields) {
                                 if (err) {
-                                    res.status(500).json({ erreur: "La requête 3 est incorrecte !" });
-                                }else{
-                                    nbCommentaires ++;
-                                    connexion.query(sql4, [nbCommentaires, idArticle], function (err, rows, fields) {
-                                        if (err) {
-                                            res.status(500).json({ erreur: "La requête 4 est incorrecte !" });
-                                        } else {
-                                            res.status(201).json({ message: "Le commentaire a été ajouté à l'article !" });
-                                        }
-                                    });
+                                    res.status(500).json({ erreur: "La requête est incorrecte !" });
                                 }
                             });
-                        }else{
+                            nbCommentaires++;
+                            connexion.query(sql4, [nbCommentaires, idArticle], function (err, rows, fields) {
+                                if (err) {
+                                    res.status(500).json({ erreur: "La requête est incorrecte !" });
+                                } else {
+                                    res.status(201).json({ message: "Le commentaire a été ajouté à l'article !" });
+                                }
+                            });
+                        } else {
                             res.status(500).json({ erreur: "L'utilisateur a déjà commenté cet article !" });
                         }
-                    }
-                });
-            } catch (error) {
-                res.status(500).json({ erreur: "L'article n'existe pas !" });
+                    });
+                } catch (error) {
+                    res.status(500).json({ erreur: "L'article n'existe pas !" });
+                }
             }
-        }
-    });
+        });
+    }else{
+        res.status(500).json({ erreur: "Les données sont incorrectes !" });
+    }
 }
