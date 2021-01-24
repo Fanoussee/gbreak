@@ -1,4 +1,34 @@
+const { json } = require("body-parser");
+const { restart } = require("nodemon");
 const connexion = require("../connect");
+
+//Requête pour créer un utilisateur
+exports.createUser = function (req, res) {
+    const values = req.body;
+    const sql1 = 'SELECT id_util FROM Utilisateur WHERE nom=? AND prenom=? AND date_naiss=?';
+    const sql2 = 'INSERT INTO Utilisateur (nom, prenom, date_naiss, mot_passe, moderateur) VALUES (?,?,?,?,?)';
+    connexion.query(sql1, [values.nom, values.prenom, values.date_naiss], function (err, rows, fields) {
+        if (err) {
+            res.status(500).json({ erreur: "La 1ere requête est incorrecte !" });
+        } else {
+            try {
+                if (rows[0].id_util > 0) {
+                    res.status(500).json({ erreur: "L'utilisateur existe déjà !" });
+                }
+            } catch (error) {
+                connexion.query(sql2,
+                    [values.nom, values.prenom, values.date_naiss, values.mot_passe, values.moderateur],
+                    function (err, rows, fields) {
+                        if (err) {
+                            res.status(500).json({ erreur: "La 2e requête est incorrecte !" });
+                        } else {
+                            res.status(200).json({ message: "Utilisateur créé !" });
+                        }
+                    });
+            }
+        }
+    });
+};
 
 //Requête pour obtenir tous les utilisateurs
 exports.getAllUsers = function (req, res) {
@@ -24,34 +54,6 @@ exports.getOneUser = function (req, res) {
                 result = rows[0].id_util;
                 if (result == idUtil) {
                     res.status(200).json(rows);
-                }
-            } catch (error) {
-                res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
-            }
-        }
-    });
-};
-
-//Requête pour supprimer un utilisateur
-exports.deleteOneUser = function (req, res) {
-    const idUtil = req.params.id;
-    const sql1 = 'SELECT * FROM Utilisateur WHERE id_util=?';
-    const sql2 = 'DELETE FROM Utilisateur WHERE id_util=?';
-    let idUserToDelete = 0;
-    connexion.query(sql1, [idUtil], function (err, rows, fields) {
-        if (err) {
-            res.status(500).json({ erreur: "La requête est incorrecte !" });
-        } else {
-            try {
-                idUserToDelete = rows[0].id_util;
-                if (idUserToDelete == idUtil) {
-                    connexion.query(sql2, [idUtil], function (err, rows, fields) {
-                        if (err) {
-                            res.status(500).json({ erreur: "La requête est incorrecte !" });
-                        } else {
-                            res.status(200).json({ message: "Utilisateur supprimé !" });
-                        }
-                    });
                 }
             } catch (error) {
                 res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
@@ -89,29 +91,41 @@ exports.modifyOneUser = function (req, res) {
     });
 };
 
-//Requête pour créer un utilisateur
-exports.createUser = function (req, res) {
-    const values = req.body;
-    const sql1 = 'SELECT id_util FROM Utilisateur WHERE nom=? AND prenom=? AND date_naiss=?';
-    const sql2 = 'INSERT INTO Utilisateur (nom, prenom, date_naiss, mot_passe, moderateur) VALUES (?,?,?,?,?)';
-    connexion.query(sql1, [values.nom, values.prenom, values.date_naiss], function (err, rows, fields) {
+//Requête pour supprimer un utilisateur
+exports.deleteOneUser = function (req, res, next) {
+    const idUtil = req.params.id;
+    let idUtilAModifier = 0;
+    const ifUtilExist = 'SELECT * FROM Utilisateur WHERE id_util=?';
+    const modifArticles = 'UPDATE Article SET id_util=? WHERE id_util=?';
+    const modifComment = 'UPDATE Commentaire SET id_util=? WHERE id_util=?';
+    const deleteUtil = 'DELETE FROM Utilisateur WHERE id_util=?';
+    connexion.query(ifUtilExist, [idUtil], function (err, rows, fields) {
         if (err) {
-            res.status(500).json({ erreur: "La 1ere requête est incorrecte !" });
+            res.status(500).json({ erreur: "La requête est incorrecte !" });
         } else {
             try {
-                if (rows[0].id_util > 0) {
-                    res.status(500).json({ erreur: "L'utilisateur existe déjà !" });
-                }
-            } catch (error) {
-                connexion.query(sql2,
-                    [values.nom, values.prenom, values.date_naiss, values.mot_passe, values.moderateur],
-                    function (err, rows, fields) {
+                idUtilAModifier = rows[0].id_util;
+                if (idUtilAModifier == idUtil) {
+                    connexion.query(modifArticles, [0, idUtil], function (err, rows, fields) {
                         if (err) {
-                            res.status(500).json({ erreur: "La 2e requête est incorrecte !" });
-                        } else {
-                            res.status(200).json({ message: "Utilisateur créé !" });
+                            res.status(500).json({ erreur: "La requête est incorrecte !" });
                         }
                     });
+                    connexion.query(modifComment, [0, idUtil], function(err, rows, fields){
+                        if (err) {
+                            res.status(500).json({ erreur: "La requête est incorrecte !" });
+                        }
+                    });
+                    connexion.query(deleteUtil, [idUtil], function (err, rows, fields) {
+                        if (err) {
+                            res.status(500).json({ erreur: "La requête est incorrecte !" });
+                        } else {
+                            res.status(200).json({ message: "L'utilisateur a été supprimé !" });
+                        }
+                    });
+                }
+            } catch (error) {
+                res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
             }
         }
     });
