@@ -9,22 +9,26 @@ exports.createUser = function (req, res) {
     const sql2 = 'INSERT INTO Utilisateur (nom, prenom, date_naiss, mot_passe, moderateur) VALUES (?,?,?,?,?)';
     connexion.query(sql1, [values.nom, values.prenom, values.date_naiss], function (err, rows, fields) {
         if (err) {
-            res.status(500).json({ erreur: "La 1ere requête est incorrecte !" });
+            res.status(500).json({ erreur: "La requête est incorrecte !" });
         } else {
             try {
                 if (rows[0].id_util > 0) {
                     res.status(500).json({ erreur: "L'utilisateur existe déjà !" });
                 }
             } catch (error) {
-                connexion.query(sql2,
-                    [values.nom, values.prenom, values.date_naiss, values.mot_passe, values.moderateur],
-                    function (err, rows, fields) {
-                        if (err) {
-                            res.status(500).json({ erreur: "La 2e requête est incorrecte !" });
-                        } else {
-                            res.status(200).json({ message: "Utilisateur créé !" });
-                        }
+                if (values.nom != null && values.prenom != null && values.date_naiss != null &&
+                    values.mot_passe != null && (values.moderateur == 0 || values.moderateur == 1)) {
+                    connexion.query(sql2, [values.nom, values.prenom, values.date_naiss, 
+                        values.mot_passe, values.moderateur], function (err, rows, fields) {
+                            if (err) {
+                                res.status(500).json({ erreur: "La requête est incorrecte !" });
+                            } else {
+                                res.status(200).json({ message: "Utilisateur créé !" });
+                            }
                     });
+                } else {
+                    res.status(500).json({ erreur: "Les informations de l'utilisateur sont incorrectes !" });
+                }
             }
         }
     });
@@ -111,7 +115,7 @@ exports.deleteOneUser = function (req, res, next) {
                             res.status(500).json({ erreur: "La requête est incorrecte !" });
                         }
                     });
-                    connexion.query(modifComment, [0, idUtil], function(err, rows, fields){
+                    connexion.query(modifComment, [0, idUtil], function (err, rows, fields) {
                         if (err) {
                             res.status(500).json({ erreur: "La requête est incorrecte !" });
                         }
