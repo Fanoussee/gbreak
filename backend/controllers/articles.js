@@ -1,6 +1,8 @@
 const { restart } = require("nodemon");
 const connexion = require("../connect");
+const { v4: uuidV4 } = require('uuid');
 
+//Requête pour obtenir tous les articles : fonctionne
 exports.getAllArticles = function (req, res) {
     const sql = 'SELECT * FROM Article';
     connexion.query(sql, function (err, rows, fields) {
@@ -12,17 +14,18 @@ exports.getAllArticles = function (req, res) {
     });
 }
 
+//Requête pour obtenir un article avec son identifiant uuid : fonctionne
 exports.getOneArticleWithId = function (req, res) {
-    const sql = 'SELECT * FROM Article WHERE id_article=?';
-    const idArticle = req.params.idArticle;
+    const sql = 'SELECT * FROM Article WHERE uuid_article=?';
+    const uuidArticle = req.params.idArticle;
     let result = 0;
-    connexion.query(sql, [idArticle], function (err, rows, fields) {
+    connexion.query(sql, [uuidArticle], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
         } else {
             try {
-                result = rows[0].id_article;
-                if (result == idArticle) {
+                result = rows[0].uuid_article;
+                if (result == uuidArticle) {
                     res.status(200).json(rows);
                 }
             } catch (error) {
@@ -32,25 +35,26 @@ exports.getOneArticleWithId = function (req, res) {
     });
 }
 
+//Requête pour obtenir tous les articles créés par un utilisateur : fonctionne
 exports.getAllArticlesForOneUser = function (req, res) {
-    const sql1 = 'SELECT * FROM Utilisateur WHERE id_util=?';
-    const sql2 = 'SELECT * FROM Article WHERE id_util=?';
-    const idUtil = req.params.idUtil;
+    const sql1 = 'SELECT * FROM Utilisateur WHERE uuid_util=?';
+    const sql2 = 'SELECT * FROM Article WHERE uuid_util=?';
+    const uuidUtil = req.params.idUtil;
     let result = 0;
-    connexion.query(sql1, [idUtil], function (err, rows, fields) {
+    connexion.query(sql1, [uuidUtil], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
         } else {
             try {
-                result = rows[0].id_util;
-                if (idUtil == result) {
-                    connexion.query(sql2, [idUtil], function (err, rows, fields) {
+                result = rows[0].uuid_util;
+                if (uuidUtil == result) {
+                    connexion.query(sql2, [uuidUtil], function (err, rows, fields) {
                         if (err) {
                             res.status(500).json({ erreur: "La requête est incorrecte !" });
                         } else {
                             try {
-                                result = rows[0].id_util;
-                                if (idUtil == result) {
+                                result = rows[0].uuid_util;
+                                if (uuidUtil == result) {
                                     res.status(200).json(rows);
                                 }
                             } catch (error) {
@@ -66,18 +70,19 @@ exports.getAllArticlesForOneUser = function (req, res) {
     });
 }
 
+//Requête pour supprimer un article : fonctionne
 exports.deleteArticle = function (req, res) {
-    const sql1 = 'SELECT * FROM Article WHERE id_article=?';
-    const sql2 = 'DELETE FROM Article WHERE id_article=?';
-    const idArticle = req.params.idArticle;
+    const sql1 = 'SELECT * FROM Article WHERE uuid_article=?';
+    const sql2 = 'DELETE FROM Article WHERE uuid_article=?';
+    const uuidArticle = req.params.idArticle;
     let result = 0;
-    connexion.query(sql1, [idArticle], function (err, rows, fields) {
+    connexion.query(sql1, [uuidArticle], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
         } else {
             try {
-                result = rows[0].id_article;
-                connexion.query(sql2, [idArticle], function (err, rows, fields) {
+                result = rows[0].uuid_article;
+                connexion.query(sql2, [uuidArticle], function (err, rows, fields) {
                     if (err) {
                         res.status(500).json({ erreur: "La requête est incorrecte !" });
                     } else {
@@ -91,19 +96,20 @@ exports.deleteArticle = function (req, res) {
     });
 }
 
+//Requête pour modifier un article : fonctionne
 exports.modifyArticle = function (req, res) {
-    const sql1 = 'SELECT * FROM Article WHERE id_article=?';
-    const sql2 = 'UPDATE Article SET ? WHERE id_article=?';
-    const idArticle = req.params.idArticle;
+    const sql1 = 'SELECT * FROM Article WHERE uuid_article=?';
+    const sql2 = 'UPDATE Article SET ? WHERE uuid_article=?';
+    const uuidArticle = req.params.idArticle;
     const values = req.body;
     let result = 0;
-    connexion.query(sql1, [idArticle], function (err, rows, fields) {
+    connexion.query(sql1, [uuidArticle], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte ! " });
         } else {
             try {
-                result = rows[0].id_article;
-                connexion.query(sql2, [values, idArticle], function (err, rows, fields) {
+                result = rows[0].uuid_article;
+                connexion.query(sql2, [values, uuidArticle], function (err, rows, fields) {
                     if (err) {
                         res.status(500).json({ erreur: "La requête est incorrecte ! " });
                     } else {
@@ -117,35 +123,37 @@ exports.modifyArticle = function (req, res) {
     });
 }
 
+//Requête pour créer un article : fonctionne
 exports.createArticle = function (req, res) {
-    const sql1 = 'SELECT * FROM Utilisateur WHERE id_util=?';
-    const sql2 = 'INSERT INTO Article (id_util, date_heure, photo, texte, nb_commentaires) VALUES (?,?,?,?,?)';
-    const idUtil = req.body.id_util;
-    const values = req.body;
-    let result = 0;
+    let idUtil = 0;
     let dateCreation = new Date();
-    connexion.query(sql1, [idUtil], function (err, rows, fields) {
-        if (err) {
-            res.status(500).json({ erreur: "La requête est incorrecte !" });
-        } else {
-            try {
-                result = rows[0].id_util;
-                if (values.texte == null && values.photo == null) {
-                    res.status(500).json({ erreur: "L'article ne peut pas être vide !" });
-                } else {
-                    connexion.query(sql2,
-                        [values.id_util, dateCreation, values.photo, values.texte, 0],
-                        function (err, rows, fields) {
-                            if (err) {
-                                res.status(500).json({ erreur: "La requête est incorrecte !" });
-                            } else {
-                                res.status(200).json({ message: "L'article a été ajouté !" });
-                            }
-                        });
+    const photo = req.body.photo;
+    const texte = req.body.texte;
+    const nbCommentaires = 0;
+    const uuidUtil = req.body.uuid_util;
+    const uuidArticle = uuidV4();
+    const sqlRecupInfosUtil = 'SELECT * FROM Utilisateur WHERE uuid_util=?';
+    const sqlCreationArticle = 'INSERT INTO Article (id_util, date_heure, photo, texte, nb_commentaires, uuid_util, uuid_article) VALUES (?,?,?,?,?,?,?)';
+    if (photo == null && texte == null) {
+        res.status(500).json({ erreur: "Les données de l'article ne peuvent être nulles !" });
+    } else {
+        connexion.query(sqlRecupInfosUtil, [uuidUtil], function (err, rows, fields) {
+            if (err) {
+                res.status(500).json({ erreur: "La requête est incorrecte !" });
+            } else {
+                try {
+                    idUtil = rows[0].id_util;
+                    connexion.query(sqlCreationArticle, [idUtil, dateCreation, photo, texte, nbCommentaires, uuidUtil, uuidArticle], function (err, rows, fields) {
+                        if (err) {
+                            res.status(500).json({ erreur: "La requête est incorrecte !" });
+                        } else {
+                            res.status(200).json({ message: "L'article a été ajouté !" });
+                        }
+                    });
+                } catch (error) {
+                    res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
                 }
-            } catch (error) {
-                res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
             }
-        }
-    });
+        });
+    }
 }
