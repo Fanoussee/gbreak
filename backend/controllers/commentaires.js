@@ -1,4 +1,5 @@
 const connexion = require('../connect');
+const { v4: uuidV4 } = require('uuid');
 
 //Requête pour obtenir tous les commentaires d'un article : fonctionne
 exports.getAllCommentsByIdArticle = function (req, res) {
@@ -37,10 +38,11 @@ exports.createComment = function (req, res) {
     const commentaire = req.body.commentaire;
     const uuidUtil = req.body.uuid_util;
     const uuidArticle = req.params.idArticle;
+    const uuidComment = uuidV4();
     const sqlRecupIdUtil = 'SELECT * FROM Utilisateur WHERE uuid_util=?';
     const sqlRecupInfosArticle = 'SELECT * FROM Article WHERE uuid_article=?';
     const sqlSiUtilAdejaCommente = 'SELECT * FROM Commentaire WHERE uuid_article=? AND uuid_util=?';
-    const sqlCreationCommentaire = 'INSERT INTO Commentaire (id_util, id_article, date_commentaire, commentaire, uuid_util, uuid_article) VALUES (?,?,?,?,?,?)';
+    const sqlCreationCommentaire = 'INSERT INTO Commentaire (id_util, id_article, date_commentaire, commentaire, uuid_util, uuid_article, uuid_commentaire) VALUES (?,?,?,?,?,?,?)';
     const sqlMAJnbCommentaires = 'UPDATE Article SET nb_commentaires=? WHERE uuid_article=?';
     if (uuidUtil != null && commentaire != null) {
         connexion.query(sqlRecupIdUtil, [uuidUtil], function (err, rows, fields) {
@@ -70,7 +72,7 @@ exports.createComment = function (req, res) {
             if (err) {
                 res.status(500).json({ erreur: "La requête siUtilAdejaCommente est incorrecte !" });
             } else if (rows.length == 0) {
-                connexion.query(sqlCreationCommentaire, [idUtil, idArticle, dateCreation, commentaire, uuidUtil, uuidArticle], function (err, rows, fields) {
+                connexion.query(sqlCreationCommentaire, [idUtil, idArticle, dateCreation, commentaire, uuidUtil, uuidArticle, uuidComment], function (err, rows, fields) {
                     if (err) {
                         res.status(500).json({ erreur: "La requête creationCommentaire est incorrecte !" });
                     }
@@ -92,24 +94,87 @@ exports.createComment = function (req, res) {
     }
 }
 
-//Requête pour modifier un commentaire : 
+//Requête pour modifier un commentaire : fonctionne
 exports.modifyComment = function (req, res) {
     const uuidCommentaire = req.params.idCommentaire;
     let idCommentaire = 0;
     const values = req.body;
     const sqlIfCommentExist = 'SELECT * FROM Commentaire WHERE uuid_commentaire=?';
     const sqlModifyComment = 'UPDATE Commentaire SET ? WHERE id_commentaire=?';
-    connexion.query(sqlIfCommentExist, [uuidCommentaire], function(err, rows, fields){
-        if(err){
+    connexion.query(sqlIfCommentExist, [uuidCommentaire], function (err, rows, fields) {
+        if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
-        }else{
+        } else {
             try {
                 idCommentaire = rows[0].id_commentaire;
-                connexion.query(sqlModifyComment, [values, idCommentaire], function(err, rows, fields){
-                    if(err){
+                connexion.query(sqlModifyComment, [values, idCommentaire], function (err, rows, fields) {
+                    if (err) {
                         res.status(500).json({ erreur: "La requête est incorrecte !" });
-                    }else{
+                    } else {
                         res.status(200).json({ message: "Le commentaire a été modifié !" });
+                    }
+                });
+            } catch (error) {
+                res.status(500).json({ erreur: "Le commentaire n'existe pas !" });
+            }
+        }
+    });
+}
+
+//Requête pour supprimer un commentaire : 
+exports.deleteComment = function (req, res) {
+    const uuidCommentaire = req.params.idCommentaire;
+    let uuidArticle = "";
+    let idCommentaire = 0;
+    let nbCommentaires = 0;
+    const sqlIfCommentExist = 'SELECT * FROM Commentaire WHERE uuid_commentaire=?';
+    const sqlRecupNbCommentaires = 'SELECT nb_commentaires FROM Article WHERE uuid_article=?';
+    const sqlModifierNbCommentaires = 'UPDATE Article SET nb_commentaires=? WHERE uuid_article=?';
+    const sqlDeleteComment = 'DELETE FROM Commentaire WHERE id_commentaire=?';
+    connexion.query(sqlIfCommentExist, [uuidCommentaire], function (err, rows, fields) {
+        if (err) {
+            res.status(500).json({
+                erreur: "La requête ifCommentExist est incorrecte !",
+                message: err
+            });
+        } else {
+            try {
+                idCommentaire = rows[0].id_commentaire;
+                uuidArticle = rows[0].uuid_article;
+                connexion.query(sqlRecupNbCommentaires, [uuidArticle], function (err, rows, fields) {
+                    if (err) {
+                        res.status(500).json({
+                            erreur: "La requête recupNbCommentaires est incorrecte !",
+                            message: err
+                        });
+                    } else {
+                        nbCommentaires = rows[0].nb_commentaires;
+                        if (nbCommentaires != 0) {
+                            nbCommentaires--;
+                            connexion.query(sqlModifierNbCommentaires, [nbCommentaires, uuidArticle], function (err, rows, fields) {
+                                if (err) {
+                                    res.status(500).json({
+                                        erreur: "La requête est incorrecte !",
+                                        message: err
+                                    });
+                                }
+                            });
+                        } else {
+                            res.status(500).json({
+                                erreur: "Ce commentaire n'est pas lié à cet article !",
+                                message: err
+                            });
+                        }
+                    }
+                });
+                connexion.query(sqlDeleteComment, [idCommentaire], function (err, rows, fields) {
+                    if (err) {
+                        res.status(500).json({
+                            erreur: "La requête est incorrecte !",
+                            message: err
+                        });
+                    } else {
+                        res.status(200).json({ message: "Le commentaire a été supprimé !" });
                     }
                 });
             } catch (error) {
