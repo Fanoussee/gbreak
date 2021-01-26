@@ -54,7 +54,7 @@ exports.createComment = function (req, res) {
                 }
             }
         });
-        connexion.query(sqlRecupInfosArticle, [uuidArticle], function(err, rows, fields){
+        connexion.query(sqlRecupInfosArticle, [uuidArticle], function (err, rows, fields) {
             if (err) {
                 res.status(500).json({ erreur: "La requête recupInfosArticle est incorrecte !" });
             } else {
@@ -89,5 +89,32 @@ exports.createComment = function (req, res) {
         });
     } else {
         res.status(500).json({ erreur: "Les données sont incorrectes !" });
-    }  
+    }
+}
+
+//Requête pour modifier un commentaire : 
+exports.modifyComment = function (req, res) {
+    const uuidCommentaire = req.params.idCommentaire;
+    let idCommentaire = 0;
+    const values = req.body;
+    const sqlIfCommentExist = 'SELECT * FROM Commentaire WHERE uuid_commentaire=?';
+    const sqlModifyComment = 'UPDATE Commentaire SET ? WHERE id_commentaire=?';
+    connexion.query(sqlIfCommentExist, [uuidCommentaire], function(err, rows, fields){
+        if(err){
+            res.status(500).json({ erreur: "La requête est incorrecte !" });
+        }else{
+            try {
+                idCommentaire = rows[0].id_commentaire;
+                connexion.query(sqlModifyComment, [values, idCommentaire], function(err, rows, fields){
+                    if(err){
+                        res.status(500).json({ erreur: "La requête est incorrecte !" });
+                    }else{
+                        res.status(200).json({ message: "Le commentaire a été modifié !" });
+                    }
+                });
+            } catch (error) {
+                res.status(500).json({ erreur: "Le commentaire n'existe pas !" });
+            }
+        }
+    });
 }

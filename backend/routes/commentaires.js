@@ -4,5 +4,6 @@ const ctrlCommentaires = require('../controllers/commentaires');
 
 router.get("/:idArticle", ctrlCommentaires.getAllCommentsByIdArticle);
 router.post("/:idArticle", ctrlCommentaires.createComment);
+router.put("/:idCommentaire", ctrlCommentaires.modifyComment);
 
 module.exports = router;
