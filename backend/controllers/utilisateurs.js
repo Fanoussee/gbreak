@@ -13,7 +13,7 @@ exports.createUser = function (req, res) {
     let mdp = "";
     let email = null;
     const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if(values.email.match(regex)){
+    if (values.email.match(regex)) {
         email = values.email;
     }
     connexion.query(sqlIfUserExist, [values.nom, values.prenom, values.date_naiss, email], function (err, rows, fields) {
@@ -86,8 +86,8 @@ exports.modifyOneUser = function (req, res) {
     const uuidUtil = req.params.id;
     const sql1 = 'SELECT * FROM Utilisateur WHERE uuid_util=?';
     const sql2 = 'UPDATE Utilisateur SET ? WHERE uuid_util=?';
-    const values = req.body;
     let idUserToModify = 0;
+    const values = req.body;
     connexion.query(sql1, [uuidUtil], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -95,13 +95,19 @@ exports.modifyOneUser = function (req, res) {
             try {
                 idUserToModify = rows[0].uuid_util;
                 if (idUserToModify == uuidUtil) {
-                    connexion.query(sql2, [values, uuidUtil], function (err, rows, fields) {
-                        if (err) {
-                            res.status(500).json({ erreur: "La requête est incorrecte !" });
-                        } else {
-                            res.status(200).json({ message: "Utilisateur modifié !" });
-                        }
-                    });
+                    bcrypt.hash(values.mot_passe, 10)
+                        .then(function (hash) {
+                            values.mot_passe = hash;
+                            connexion.query(sql2, [values, uuidUtil], function (err, rows, fields) {
+                                if (err) {
+                                    res.status(500).json({ erreur: "La requête est incorrecte !" });
+                                } else {
+                                    res.status(200).json({ message: "Utilisateur modifié !" });
+                                }
+                            });
+                        }).catch(function (error) {
+                            res.status(500).json({ erreur: error });
+                        });
                 }
             } catch (error) {
                 res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
