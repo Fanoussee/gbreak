@@ -7,41 +7,44 @@ const bcrypt = require("bcrypt");
 //Requête pour créer un utilisateur : fonctionne
 exports.createUser = function (req, res) {
     const values = req.body;
-    const sqlIfUserExist = 'SELECT id_util FROM Utilisateur WHERE nom=? AND prenom=? AND date_naiss=?';
-    const sql2 = 'INSERT INTO Utilisateur (uuid_util, nom, prenom, date_naiss, mot_passe, moderateur) VALUES (?, ?,?,?,?,?)';
+    const sqlIfUserExist = 'SELECT * FROM Utilisateur WHERE nom=? AND prenom=? AND date_naiss=? OR email=?';
+    const sqlCreerUser = 'INSERT INTO Utilisateur (uuid_util, email, nom, prenom, date_naiss, mot_passe, moderateur) VALUES (?,?,?,?,?,?,?)';
     const uuidUtil = uuidV4();
     let mdp = "";
-    connexion.query(sqlIfUserExist, [values.nom, values.prenom, values.date_naiss], function (err, rows, fields) {
+    let email = null;
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(values.email.match(regex)){
+        email = values.email;
+    }
+    connexion.query(sqlIfUserExist, [values.nom, values.prenom, values.date_naiss, email], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête sqlIfExist est incorrecte !" });
-        } else {
-            try {
-                if (rows[0].id_util > 0) {
-                    res.status(500).json({ erreur: "L'utilisateur existe déjà !" });
-                }
-            } catch (error) {
-                if (values.nom != null && values.prenom != null && values.date_naiss != null &&
-                    values.mot_passe != null && (values.moderateur == 0 || values.moderateur == 1)) {
-                    bcrypt.hash(values.mot_passe, 10)
-                        .then(function (hash) {
-                            mdp = hash;
-                            connexion.query(sql2, [uuidUtil, values.nom, values.prenom, values.date_naiss,
-                                mdp, values.moderateur], function (err, rows, fields) {
-                                    if (err) {
-                                        res.status(500).json({ erreur: "La requête est incorrecte !",
-                                                               mysql: err });
-                                    } else {
-                                        res.status(200).json({ message: "Utilisateur créé !" });
-                                    }
-                                });
-                        })
-                        .catch(function (error) {
-                            res.status(500).json({ error });
-                        });
-                } else {
-                    res.status(500).json({ erreur: "Les informations de l'utilisateur sont incorrectes !" });
-                }
+        } else if (rows.length == 0) {
+            if (email != null && values.nom != null && values.prenom != null && values.date_naiss != null &&
+                values.mot_passe != null && (values.moderateur == 0 || values.moderateur == 1)) {
+                bcrypt.hash(values.mot_passe, 10)
+                    .then(function (hash) {
+                        mdp = hash;
+                        connexion.query(sqlCreerUser, [uuidUtil, email, values.nom, values.prenom, values.date_naiss,
+                            mdp, values.moderateur], function (err, rows, fields) {
+                                if (err) {
+                                    res.status(500).json({
+                                        erreur: "La requête creerUser est incorrecte !",
+                                        mysql: err
+                                    });
+                                } else {
+                                    res.status(201).json({ message: "L'utilisateur est créé !" });
+                                }
+                            });
+                    })
+                    .catch(function (error) {
+                        res.status(500).json({ error });
+                    });
+            } else {
+                res.status(500).json({ erreur: "Les informations de l'utilisateur sont incorrectes !" });
             }
+        } else {
+            res.status(500).json({ erreur: "L'utilisateur ou l'adresse mail existe déjà !" });
         }
     });
 };
