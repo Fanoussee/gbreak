@@ -1,0 +1,10 @@
+<h2>Détail de l'article</h2>
+<div class="row justify-content-between">
+    <div class="col-6 ">Créé par : {{ article.uuid_util }}</div>
+    <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
+</div>
+<p>{{ article.photo }}</p>
+<p class="text-dark">{{ article.texte }}</p>
+<button class="btn btn-primary">Modifier</button>
+<button class="btn btn-danger">Supprimer</button>
+<a routerLink="/articles">Retour à la liste des articles</a>

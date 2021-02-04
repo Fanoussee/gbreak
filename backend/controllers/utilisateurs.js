@@ -1,8 +1,30 @@
-const { json } = require("body-parser");
-const { restart } = require("nodemon");
 const connexion = require("../connect");
 const { v4: uuidV4 } = require("uuid");
 const bcrypt = require("bcrypt");
+
+//Requête pour connecter un utilisateur : 
+exports.connectUser = function(req, res){
+    const email = req.body.email;
+    const password = req.body.mot_passe;
+    const sqlIfUserExist = 'SELECT email, mot_passe FROM Utilisateur WHERE email=?';
+    connexion.query(sqlIfUserExist, [email], function(err, rows, fields){
+        if(err){
+            res.status(500).json({ erreur: "La requête sqlIfExist est incorrecte !" });
+        }else if(rows.length === 1){
+            bcrypt.compare(password, rows[0].mot_passe).then(valid => {
+                if(!valid){
+                    res.status(500).json({ erreur: "Le mot de passe est incorrect !" });
+                }else{
+                    res.status(200).json({ message: "L'utilisateur existe et le mot de passe est correct !" });
+                }
+            }).catch(error => {
+                res.status(500).json({ erreur: "L'authentification a échouée ! " + error });
+            })
+        }else{
+            res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
+        }
+    });
+};
 
 //Requête pour créer un utilisateur : fonctionne
 exports.createUser = function (req, res) {
@@ -52,6 +74,7 @@ exports.createUser = function (req, res) {
 //Requête pour obtenir tous les utilisateurs : fonctionne
 exports.getAllUsers = function (req, res) {
     const sql = 'SELECT * FROM Utilisateur';
+    
     connexion.query(sql, function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });

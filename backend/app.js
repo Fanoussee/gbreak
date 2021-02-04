@@ -7,6 +7,8 @@ const app = express();
 //Import du package body-parser
 const bodyParser = require('body-parser');
 
+const path = require('path');
+
 //Résoud les erreurs de CORS
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -17,6 +19,8 @@ app.use(function (req, res, next) {
 
 //Utilisation de body-parser pour l'app
 app.use(bodyParser.json());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const routesUtilisateurs = require("./routes/utilisateurs");
 app.use("/api/utilisateurs", routesUtilisateurs);

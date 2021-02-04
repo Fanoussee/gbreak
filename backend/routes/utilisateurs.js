@@ -6,6 +6,7 @@ router.get("/", ctrlUtilisateur.getAllUsers);
 router.get("/:id", ctrlUtilisateur.getOneUser);
 router.delete("/:id", ctrlUtilisateur.deleteOneUser);
 router.put("/:id", ctrlUtilisateur.modifyOneUser);
-router.post("/", ctrlUtilisateur.createUser);
+router.post("/inscription", ctrlUtilisateur.createUser);
+router.post("/connexion", ctrlUtilisateur.connectUser);
 
 module.exports = router;

@@ -1,0 +1,12 @@
+<h2>Liste des articles</h2>
+<ul class="list-group">
+    <li class="list-group-item" *ngFor="let article of articles">
+        <div class="row justify-content-between">
+            <div class="col-6 ">Créé par : {{ article.uuid_util }}</div>
+            <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
+        </div>
+        <p>{{ article.photo }}</p>
+        <p class="text-dark">{{ article.texte }}</p>
+        <a [routerLink]="[id]">Détail de l'article</a>
+    </li>
+</ul>
