@@ -1,12 +1,22 @@
-<h2>Liste des articles</h2>
-<ul class="list-group">
-    <li class="list-group-item" *ngFor="let article of articles">
-        <div class="row justify-content-between">
-            <div class="col-6 ">Créé par : {{ article.uuid_util }}</div>
-            <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
+<h2 class="m-4 bg-light">Liste des articles</h2>
+<div class="card m-2 stretched-link bg-light"
+     *ngFor="let article of articles"
+     [routerLink]="[article.uuid_article]">
+    <div>
+        <p class="border-bottom border-secondary" *ngIf="article.photo != null">{{ article.photo }}</p>
+    </div>
+    <div class="card-body">
+        <div class="card-title p-2justify-content-between">
+            <div class="row">
+                <div class="col-6">Créé par : {{ article.uuid_util }}</div>
+                <div class="font-italic col-6 text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
+            </div>
         </div>
-        <p>{{ article.photo }}</p>
-        <p class="text-dark">{{ article.texte }}</p>
-        <a [routerLink]="[id]">Détail de l'article</a>
-    </li>
-</ul>
+        <div class="card-text  border-bottom border-top border-info">
+            <p class="text-dark font-weight-bold mt-3" *ngIf="article.texte != null">{{ article.texte }}</p>
+        </div>
+        <div class="card-text">
+            <p class="font-italic">Nombre de commentaires : {{ article.nb_commentaires }}</p>
+        </div>
+    </div>
+</div>

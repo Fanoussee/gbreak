@@ -18,7 +18,7 @@ import { HeaderComponent } from './header/header.component';
 const appRoutes : Routes = [
   { path: 'articles', canActivate: [AuthGuard], component: ArticleListComponent },
   { path: 'articles/new', canActivate: [AuthGuard], component: NewArticleComponent },
-  { path: 'articles/:id', canActivate: [AuthGuard], component: SingleArticleComponent },
+  { path: 'articles/:uuid_article', canActivate: [AuthGuard], component: SingleArticleComponent },
   { path: 'connexion', component: ConnexionComponent },
   { path: 'inscription', component: InscriptionComponent },
   { path: '', component: ArticleListComponent },

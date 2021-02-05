@@ -12,6 +12,7 @@ export class ArticleListComponent implements OnInit {
 
   articleSubscription: Subscription;
   articles: Article[];
+  msgErreur = "" ;
 
   constructor(private articleService: ArticlesService) { }
 
@@ -21,9 +22,10 @@ export class ArticleListComponent implements OnInit {
         this.articles = articles;
       },
       (error) => {
-        console.log(error);
+        this.msgErreur = error;
       }
     );
     this.articleService.getArticles();
   }
+  
 }

@@ -9,6 +9,9 @@ export class ArticlesService implements OnInit {
 
   private urlApi = 'http://localhost:3000/api/articles';
   articlesSubject = new Subject<Article[]>();
+  oneArticleSubject = new Subject<Article>();
+  msgErreur = "";
+  articles = [];
   
   constructor(private http: HttpClient) { }
 
@@ -24,12 +27,22 @@ export class ArticlesService implements OnInit {
       },
       (error) => {
         this.articlesSubject.next([]);
-        console.log(error);
+        this.msgErreur = error;
       }
     );
   }
 
   getArticleById(idArticle: string) {
+    const url = this.urlApi + "/" + idArticle;
+    this.http.get(url).subscribe(
+      (article: Article) => {
+        this.oneArticleSubject.next(article);
+      },
+      (error) => {
+        this.oneArticleSubject.next();
+        this.msgErreur = error;
+      }
+    );
   }
 
   modifyArticle() {

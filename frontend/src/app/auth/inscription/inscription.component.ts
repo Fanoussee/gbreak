@@ -30,7 +30,7 @@ export class InscriptionComponent implements OnInit {
       nom: ['', [Validators.required]],
       prenom: ['', [Validators.required]],
       date_naiss: ['', [Validators.required]],
-      moderateur: ['', [Validators.required]],
+      moderateur: [0, [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       mot_passe: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     });

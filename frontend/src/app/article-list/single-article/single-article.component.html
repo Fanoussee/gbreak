@@ -1,10 +1,30 @@
-<h2>Détail de l'article</h2>
-<div class="row justify-content-between">
-    <div class="col-6 ">Créé par : {{ article.uuid_util }}</div>
-    <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
+<div *ngFor="let article of article">
+    <h2 class="m-4">Détail de l'article</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <div class="row justify-content-between">
+                <div class="col-6 ">Créé par : {{ article.uuid_util }}</div>
+                <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <p>{{ article.photo }}</p>
+            <p class="text-dark">{{ article.texte }}</p>
+        </li>
+        <li class="list-group-item">
+            <p>Nombre de commentaires : {{ article.nb_commentaires }}</p>
+        </li>
+    </ul>
+
+    <div class="row">
+        <div class="col-6">
+            <button class="btn btn-primary mt-4" routerLink="/articles">Retour à la liste des articles</button>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+            <button class="btn btn-primary m-4">Modifier</button>
+            <button class="btn btn-danger m-4">Supprimer</button>
+        </div>
+    </div>
+    <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>
 </div>
-<p>{{ article.photo }}</p>
-<p class="text-dark">{{ article.texte }}</p>
-<button class="btn btn-primary">Modifier</button>
-<button class="btn btn-danger">Supprimer</button>
-<a routerLink="/articles">Retour à la liste des articles</a>
