@@ -1,10 +1,12 @@
-const { restart } = require("nodemon");
 const connexion = require("../connect");
 const { v4: uuidV4 } = require('uuid');
 
 //Requête pour obtenir tous les articles : fonctionne
 exports.getAllArticles = function (req, res) {
-    const sql = 'SELECT * FROM Article';
+    const sql = "SELECT uuid_article, nom, prenom, date_heure, photo, texte, nb_commentaires "
+                + "FROM Article, Utilisateur "
+                + "WHERE article.uuid_util=utilisateur.uuid_util"
+;
     connexion.query(sql, function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -16,7 +18,10 @@ exports.getAllArticles = function (req, res) {
 
 //Requête pour obtenir un article avec son identifiant uuid : fonctionne
 exports.getOneArticleWithId = function (req, res) {
-    const sql = 'SELECT * FROM Article WHERE uuid_article=?';
+    const sql = "SELECT uuid_article, nom, prenom, date_heure, photo, texte, nb_commentaires "
+                + "FROM Article, Utilisateur "
+                + "WHERE article.uuid_util=utilisateur.uuid_util AND uuid_article=?"
+;
     const uuidArticle = req.params.idArticle;
     let result = 0;
     connexion.query(sql, [uuidArticle], function (err, rows, fields) {
@@ -37,8 +42,11 @@ exports.getOneArticleWithId = function (req, res) {
 
 //Requête pour obtenir tous les articles créés par un utilisateur : fonctionne
 exports.getAllArticlesForOneUser = function (req, res) {
-    const sql1 = 'SELECT uuid_util FROM Utilisateur WHERE uuid_util=?';
-    const sql2 = 'SELECT * FROM Article WHERE uuid_util=?';
+    const sql1 = "SELECT uuid_util FROM Utilisateur WHERE uuid_util=?";
+    const sql2 = "SELECT uuid_article, nom, prenom, date_heure, photo, texte, nb_commentaires "
+                 + "FROM Article "
+                 + "WHERE uuid_util=?"
+;
     const uuidUtil = req.params.idUtil;
     let result = 0;
     connexion.query(sql1, [uuidUtil], function (err, rows, fields) {
