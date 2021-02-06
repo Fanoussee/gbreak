@@ -19,9 +19,19 @@ export class AuthService {
             email,
             mot_passe
         };
-        if (this.donneesValides) {
-            this.http.post(this.urlUtilisateurs + '/connexion', infosConnect);
-            this.isAuth = true;
+        if (this.donneesValides(infosConnect)) {
+            return new Promise((resolve, reject) => {
+                this.http.post(this.urlUtilisateurs + '/connexion', infosConnect).subscribe(
+                    (value) => {
+                        this.isAuth = true;
+                        this.messErreur = null;
+                        resolve(value);
+                    },
+                    (error) => {
+                        this.messErreur = error.error.erreur;
+                        reject(error);
+                    });
+            });
         } else {
             this.messErreur = "Les données saisies sont incorrectes !";
         }
@@ -31,24 +41,29 @@ export class AuthService {
         this.isAuth = false;
     }
 
+    getIsAuth(){
+        return this.isAuth;
+    }
+
     private donneesValides({ email, mot_passe }) {
         let donneesValides = false;
         donneesValides = this.verifEmail(email);
-        donneesValides = this.verifTailleString(mot_passe, 5);
+        donneesValides = this.verifMotPasse(mot_passe);
         return donneesValides;
     }
 
-    private verifTailleString(texte: string, taille: number) {
-        if (texte.length >= taille) {
+    private verifEmail(email: string) {
+        const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (email.match(regex)) {
             return true;
         } else {
             return false;
         }
     }
 
-    private verifEmail(email: string) {
-        const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (email.match(regex)) {
+    private verifMotPasse(mot_passe: string) {
+        const regex = /[0-9a-zA-Z]{6,}/;
+        if (mot_passe.match(regex)) {
             return true;
         } else {
             return false;

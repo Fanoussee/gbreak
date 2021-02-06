@@ -1,13 +1,18 @@
-<h2>Se connecter</h2>
-<form action="">
-    <div class="form-group">
-        <label for="">Adresse email</label>
-        <input type="text">
+<div class="row">
+    <div class="col-6">
+        <h2>Se connecter</h2>
+        <form [formGroup]="connexionForm" (ngSubmit)="onConnexion()">
+            <div class="form-group">
+                <label for="email">Adresse mail</label>
+                <input type="email" id="email" class="form-control" formControlName="email">
+            </div>
+            <div class="form-group">
+                <label for="mot_passe">Mot de passe</label>
+                <input type="password" id="mot_passe" class="form-control" formControlName="mot_passe">
+            </div>
+            <button type="submit" class="btn btn-success" [disabled]="connexionForm.invalid">Se connecter</button>
+            <p class="text-danger" *ngIf="!authStatut">{{ msgErreur }}</p>
+        </form>
     </div>
-    <div class="form-group">
-        <label for="">Mot de passe</label>
-        <input type="text">
-    </div>
-</form>
-<button class="btn btn-success" *ngIf="!authStatut" (click)="onConnexion()">Se connecter</button>
-<button class="btn btn-danger" *ngIf="authStatut" (click)="onDeconnexion()">Se déconnecter</button>
+</div>
+

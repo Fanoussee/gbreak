@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Utilisateur } from 'src/app/models/Utilisateur.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-inscription',
@@ -12,13 +13,14 @@ import { Utilisateur } from 'src/app/models/Utilisateur.model';
 export class InscriptionComponent implements OnInit {
 
   inscriptionForm: FormGroup;
-  msgErreur: string;
+  msgErreur: string = null;
   urlUtilisateurs = 'http://localhost:3000/api/utilisateurs';
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -36,7 +38,7 @@ export class InscriptionComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onInscription() {
     const nom = this.inscriptionForm.get('nom').value;
     const prenom = this.inscriptionForm.get('prenom').value;
     const date_naiss = this.inscriptionForm.get('date_naiss').value;
@@ -45,11 +47,24 @@ export class InscriptionComponent implements OnInit {
     const mot_passe = this.inscriptionForm.get('mot_passe').value;
     const newUser = new Utilisateur(nom, prenom, date_naiss, moderateur, email, mot_passe);
     if(this.donneesValides(newUser)){
-      this.http.post(this.urlUtilisateurs + "/inscription", newUser).subscribe();
-      this.router.navigate(['/articles']);
+      this.http.post(this.urlUtilisateurs + "/inscription", newUser).subscribe(
+        () => {
+          this.authService.isAuth = true;
+          this.router.navigate(['/articles']);
+        },
+        (error) => {
+          this.authService.isAuth = false;
+          this.msgErreur = error.error.erreur;
+        }
+      );
     }else{
       this.msgErreur = "Les données sont invalides !";
     }
+  }
+  
+  onResetForm(){
+    this.initForm();
+    this.msgErreur = null;
   }
 
   private donneesValides(utilisateur: Utilisateur) {

@@ -21,7 +21,7 @@ const appRoutes : Routes = [
   { path: 'articles/:uuid_article', canActivate: [AuthGuard], component: SingleArticleComponent },
   { path: 'connexion', component: ConnexionComponent },
   { path: 'inscription', component: InscriptionComponent },
-  { path: '', component: ArticleListComponent },
+  { path: '', component: ConnexionComponent },
   { path: '**', component: ConnexionComponent }
 ];
 

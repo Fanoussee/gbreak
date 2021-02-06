@@ -9,12 +9,8 @@ export class UtilisateursService {
 
   constructor(private http: HttpClient) { }
 
-  createUtilisateur(utilisateur : Utilisateur){
-
-  }
-
   getUtilisateurs() {
-    this.http.get(this.urlUtilisateurs).subscribe(
+    /*this.http.get(this.urlUtilisateurs).subscribe(
       (utilisateurs: Utilisateur[]) => {
         this.utilisateurs.next(utilisateurs);
       },
@@ -22,7 +18,7 @@ export class UtilisateursService {
         this.utilisateurs.next([]);
         console.log(error);
       }
-    );
+    );*/
   }
 
   getUtilisateurById(idUtil: string) {

@@ -3,11 +3,22 @@
       Articles
     </a>
     <div class="nav">
-      <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="inscription">
+      <a routerLinkActive="active" 
+         class="nav-link navbar-brand" 
+         routerLink="inscription"
+         *ngIf="!isAuth">
         Inscription
       </a>
-      <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="connexion">
+      <a routerLinkActive="active"
+         class="nav-link navbar-brand" 
+         routerLink="connexion"
+         *ngIf="!isAuth">
         Connexion
+      </a>
+      <a class="nav-link navbar-brand" 
+         *ngIf="isAuth"
+         (click)="onDeconnexion()">
+        Déconnexion
       </a>
     </div>
   </nav>

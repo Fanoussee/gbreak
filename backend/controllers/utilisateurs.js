@@ -1,27 +1,39 @@
 const connexion = require("../connect");
 const { v4: uuidV4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 
-//Requête pour connecter un utilisateur : 
+//Requête pour connecter un utilisateur : fonctionne
 exports.connectUser = function(req, res){
     const email = req.body.email;
-    const password = req.body.mot_passe;
-    const sqlIfUserExist = 'SELECT email, mot_passe FROM Utilisateur WHERE email=?';
+    const mot_passe = req.body.mot_passe;
+    const sqlIfUserExist = 'SELECT * FROM Utilisateur WHERE email=?';
     connexion.query(sqlIfUserExist, [email], function(err, rows, fields){
         if(err){
             res.status(500).json({ erreur: "La requête sqlIfExist est incorrecte !" });
         }else if(rows.length === 1){
-            bcrypt.compare(password, rows[0].mot_passe).then(valid => {
+            bcrypt.compare(mot_passe, rows[0].mot_passe).then(valid => {
                 if(!valid){
-                    res.status(500).json({ erreur: "Le mot de passe est incorrect !" });
+                    return res.status(500).json({ erreur: "Le mot de passe est incorrect !" });
                 }else{
-                    res.status(200).json({ message: "L'utilisateur existe et le mot de passe est correct !" });
+                    res.status(200).json({ uuid_util: rows[0].uuid_util,
+                                           nom: rows[0].nom,
+                                           prenom: rows[0].prenom,
+                                           date_naiss: rows[0].date_naiss,
+                                           email,
+                                           mot_passe,
+                                           token: jwt.sign(
+                                               { uuid_util: rows[0].uuid_util },
+                                               'RANDOM_TOKEN_SECRET',
+                                               { expiresIn: '24h' }
+                                           ),
+                                           message: "L'utilisateur existe et le mot de passe est correct !" });
                 }
             }).catch(error => {
-                res.status(500).json({ erreur: "L'authentification a échouée ! " + error });
-            })
+                return res.status(500).json({ erreur: "L'authentification a échouée ! " + error });
+            });
         }else{
-            res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
+            return res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
         }
     });
 };
@@ -66,7 +78,7 @@ exports.createUser = function (req, res) {
                 res.status(500).json({ erreur: "Les informations de l'utilisateur sont incorrectes !" });
             }
         } else {
-            res.status(500).json({ erreur: "L'utilisateur ou l'adresse mail existe déjà !" });
+            return res.status(500).json({ erreur: "L'utilisateur ou l'adresse mail existe déjà !" });
         }
     });
 };
