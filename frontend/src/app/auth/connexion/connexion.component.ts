@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { rejects } from 'assert';
-import { error } from 'protractor';
+import { HeaderComponent } from 'src/app/header/header.component';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -13,20 +12,17 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ConnexionComponent implements OnInit {
 
-  authStatut: boolean = false;
   connexionForm: FormGroup;
-  @Input() msgErreur: string = null;
-  urlUtilisateurs = 'http://localhost:3000/api/utilisateurs';
+  msgErreur: string = null;
+  urlUtilisateurs = 'http://localhost:3000/api/utilisateurs/connexion';
 
-  //email: "celine.laurent@gmail.com";
-  //mot_passe: "celine";
-
-  constructor(private authService: AuthService,
+  constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private authService: AuthService){}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.initForm();
   }
 
@@ -41,31 +37,29 @@ export class ConnexionComponent implements OnInit {
     const email = this.connexionForm.get('email').value;
     const mot_passe = this.connexionForm.get('mot_passe').value;
     if (this.donneesValides(email, mot_passe)) {
-      this.authService.connexion(email, mot_passe).then(
+      this.http.post(this.urlUtilisateurs, {email, mot_passe}).subscribe(
         () => {
-          this.authStatut = this.authService.isAuth;
-          console.log("Vous êtes authentifié !");
+          this.authService.isAuth = true;
           this.router.navigate(['/articles']);
+        },
+        (error) => {
+          this.authService.isAuth = false;
+          this.msgErreur = error.error.erreur;
         }
-      ).catch((error) => {
-        this.msgErreur = this.authService.messErreur;
-      });
+      );
     } else {
-      this.msgErreur = "Les données sont incorrectes !";
+      this.msgErreur = "Les données sont invalides !";
     }
   }
 
-  private async connectToServer(email, mot_passe) {
-    return new Promise((resolve, reject) => {
-      resolve(
-        this.authService.connexion(email, mot_passe)
-      );
-    });
+  onResetForm(){
+    this.initForm();
+    this.msgErreur = null;
   }
 
   onDeconnexion() {
     this.authService.deconnexion();
-    this.authStatut = this.authService.isAuth;
+    this.authService.isAuth = false;
   }
 
   private donneesValides(email: string, mot_passe: string) {

@@ -1,4 +1,5 @@
 <h2 class="m-4 bg-light">Liste des articles</h2>
+<button class="btn btn-success" routerLink="new">Ajouter un article</button>
 <div class="card m-2 stretched-link bg-light"
      *ngFor="let article of articles"
      [routerLink]="[article.uuid_article]">
@@ -8,7 +9,7 @@
     <div class="card-body">
         <div class="card-title p-2justify-content-between">
             <div class="row">
-                <div class="col-6">Créé par : {{ article.uuid_util }}</div>
+                <div class="col-6">Créé par : <span class="font-weight-bold">{{ article.nom }} {{ article.prenom }}</span></div>
                 <div class="font-italic col-6 text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
             </div>
         </div>

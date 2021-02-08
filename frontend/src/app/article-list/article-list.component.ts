@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { Article } from '../models/Article.model';
 import { ArticlesService } from '../services/articles.service';
 
@@ -10,22 +9,24 @@ import { ArticlesService } from '../services/articles.service';
 })
 export class ArticleListComponent implements OnInit {
 
-  articleSubscription: Subscription;
   articles: Article[];
-  msgErreur = "" ;
+  msgErreur: string = null;
 
-  constructor(private articleService: ArticlesService) { }
+  constructor(private articlesService: ArticlesService) { }
 
   ngOnInit() {
-    this.articleSubscription = this.articleService.articlesSubject.subscribe(
-      (articles :Article[]) => {
+    this.articlesService.getArticles().subscribe(
+      (articles : Article[]) => {
         this.articles = articles;
       },
       (error) => {
-        this.msgErreur = error;
+        console.log(error);
+        this.msgErreur = JSON.stringify(error);
       }
     );
-    this.articleService.getArticles();
   }
-  
+
+  ajouterArticle(){
+    console.log("J'ai ajouté un article !");
+  }
 }

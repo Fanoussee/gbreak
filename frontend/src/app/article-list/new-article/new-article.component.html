@@ -1,1 +1,27 @@
-<p>new-article works!</p>
+<div class="row">
+    <div class="col-6">
+        <h2>Ajouter un article</h2>
+        <form [formGroup]="articleForm" (ngSubmit)="onAjouterArticle()">
+            <div class="form-group">
+                <label for="photo">Photo</label>
+                <input type="text" id="photo" class="form-control" formControlName="photo">
+            </div>
+            <div class="form-group">
+                <label for="texte">Texte</label>
+                <textarea type="text-area" id="texte" class="form-control" formControlName="texte"></textarea>
+            </div>
+            <button class="btn btn-success m-2" 
+                    type="submit" 
+                    [disabled]="articleForm.invalid || msgErreur != null">
+                    Ajouter un article
+            </button>
+            <button class="btn btn-danger m-2" 
+                    type="button" 
+                    *ngIf="msgErreur != null" 
+                    (click)="onResetForm()">
+                    Effacer
+            </button>
+        </form>
+        <p class="text-danger" *ngIf="msgErreur != null">{{ msgErreur }}</p>
+    </div>
+</div>

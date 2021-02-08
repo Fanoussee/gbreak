@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Utilisateur } from 'src/app/models/Utilisateur.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { UtilisateursService } from 'src/app/services/utilisateurs.service';
 
 @Component({
   selector: 'app-inscription',
@@ -14,16 +14,14 @@ export class InscriptionComponent implements OnInit {
 
   inscriptionForm: FormGroup;
   msgErreur: string = null;
-  urlUtilisateurs = 'http://localhost:3000/api/utilisateurs';
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private http: HttpClient,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private utilisateursService: UtilisateursService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.initForm();
   }
 
@@ -46,11 +44,12 @@ export class InscriptionComponent implements OnInit {
     const email = this.inscriptionForm.get('email').value;
     const mot_passe = this.inscriptionForm.get('mot_passe').value;
     const newUser = new Utilisateur(nom, prenom, date_naiss, moderateur, email, mot_passe);
+    console.log(newUser);
     if(this.donneesValides(newUser)){
-      this.http.post(this.urlUtilisateurs + "/inscription", newUser).subscribe(
+      this.utilisateursService.createUtilisateur(newUser).subscribe(
         () => {
           this.authService.isAuth = true;
-          this.router.navigate(['/articles']);
+          this.router.navigate(['/utilisateurs']);
         },
         (error) => {
           this.authService.isAuth = false;
@@ -73,7 +72,6 @@ export class InscriptionComponent implements OnInit {
     donneesValides = this.verifTailleString(utilisateur.prenom, 2);
     donneesValides = this.verifMotPasse(utilisateur.mot_passe);
     donneesValides = this.verifDate(utilisateur.date_naiss);
-    donneesValides = utilisateur.moderateur === 0 || utilisateur.moderateur === 1;
     donneesValides = this.verifEmail(utilisateur.email);
     return donneesValides;
   }

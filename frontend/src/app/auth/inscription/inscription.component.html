@@ -22,8 +22,17 @@
                 <label for="mot_passe">Mot de passe</label>
                 <input type="password" id="mot_passe" class="form-control" formControlName="mot_passe">
             </div>
-            <button class="btn btn-success m-2" type="submit" [disabled]="inscriptionForm.invalid">S'inscrire</button>
-            <button class="btn btn-danger m-2" type="button" *ngIf="msgErreur != null" (click)="onResetForm()">Effacer</button>
+            <button class="btn btn-success m-2" 
+                    type="submit" 
+                    [disabled]="inscriptionForm.invalid || msgErreur != null">
+                    S'inscrire
+            </button>
+            <button class="btn btn-danger m-2" 
+                    type="button" 
+                    *ngIf="msgErreur != null" 
+                    (click)="onResetForm()">
+                    Effacer
+            </button>
         </form>
         <p class="text-danger" *ngIf="msgErreur != null">{{ msgErreur }}</p>
     </div>

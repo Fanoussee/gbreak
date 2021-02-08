@@ -1,0 +1,10 @@
+<h2>Liste des utilisateurs</h2>
+<ul>
+    <li class="list-group-item" *ngFor="let utilisateur of utilisateurs">
+        <p><strong>Nom / Prénom : </strong>{{ utilisateur.nom }} {{ utilisateur.prenom }}</p>
+        <p><strong>Date de naissance : </strong>{{ utilisateur.date_naiss | date : 'dd/MM/yyyy'}}</p>
+        <p><strong>Email : </strong>{{ utilisateur.email }}</p>
+        <p><strong>Mot de passe : </strong>{{ utilisateur.mot_passe }}</p>
+        <p *ngIf="utilisateur.moderateur==1">(Modérateur)</p>
+    </li>
+</ul>

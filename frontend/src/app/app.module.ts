@@ -14,11 +14,14 @@ import { AuthService } from './services/auth.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { NewArticleComponent } from './article-list/new-article/new-article.component';
 import { HeaderComponent } from './header/header.component';
+import { UtilisateursListComponent } from './utilisateurs-list/utilisateurs-list.component';
+import { UtilisateursService } from './services/utilisateurs.service';
 
 const appRoutes : Routes = [
-  { path: 'articles', canActivate: [AuthGuard], component: ArticleListComponent },
-  { path: 'articles/new', canActivate: [AuthGuard], component: NewArticleComponent },
-  { path: 'articles/:uuid_article', canActivate: [AuthGuard], component: SingleArticleComponent },
+  { path: 'articles', component: ArticleListComponent },
+  { path: 'articles/new', component: NewArticleComponent },
+  { path: 'articles/:uuid_article', component: SingleArticleComponent },
+  { path: 'utilisateurs', component: UtilisateursListComponent},
   { path: 'connexion', component: ConnexionComponent },
   { path: 'inscription', component: InscriptionComponent },
   { path: '', component: ConnexionComponent },
@@ -33,7 +36,8 @@ const appRoutes : Routes = [
     ConnexionComponent,
     InscriptionComponent,
     NewArticleComponent,
-    HeaderComponent
+    HeaderComponent,
+    UtilisateursListComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +48,7 @@ const appRoutes : Routes = [
   ],
   providers: [
     ArticlesService,
+    UtilisateursService,
     AuthService,
     AuthGuard
   ],

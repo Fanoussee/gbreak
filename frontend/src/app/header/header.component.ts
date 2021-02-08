@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -8,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class HeaderComponent implements OnInit {
 
-  isAuth: boolean = false;
+  isAuth : boolean ;
 
   constructor(private authService: AuthService) { }
 
@@ -18,8 +20,10 @@ export class HeaderComponent implements OnInit {
 
   onDeconnexion() {
     this.authService.deconnexion();
-    this.isAuth = false;
   }
 
+  setIsAuth(value: boolean){
+    this.isAuth = value;
+  }
   
 }

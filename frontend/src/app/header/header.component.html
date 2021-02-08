@@ -2,17 +2,20 @@
     <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="articles">
       Articles
     </a>
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="utilisateurs">
+      Utilisateurs
+    </a>
     <div class="nav">
       <a routerLinkActive="active" 
          class="nav-link navbar-brand" 
          routerLink="inscription"
-         *ngIf="!isAuth">
+         >
         Inscription
       </a>
       <a routerLinkActive="active"
          class="nav-link navbar-brand" 
          routerLink="connexion"
-         *ngIf="!isAuth">
+         >
         Connexion
       </a>
       <a class="nav-link navbar-brand" 

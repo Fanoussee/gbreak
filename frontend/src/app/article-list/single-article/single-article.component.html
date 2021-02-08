@@ -3,8 +3,8 @@
     <ul class="list-group">
         <li class="list-group-item">
             <div class="row justify-content-between">
-                <div class="col-6 ">Créé par : {{ article.uuid_util }}</div>
-                <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
+                <div class="col-6 ">Créé par : {{ article.nom }} {{ article.prenom }}</div>
+                <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm a'}}
                 </div>
             </div>
         </li>
@@ -22,8 +22,8 @@
             <button class="btn btn-primary mt-4" routerLink="/articles">Retour à la liste des articles</button>
         </div>
         <div class="col-6 d-flex justify-content-end">
-            <button class="btn btn-primary m-4">Modifier</button>
-            <button class="btn btn-danger m-4">Supprimer</button>
+            <button class="btn btn-primary m-4" (click)="changeModify()">Modifier</button>
+            <button class="btn btn-danger m-4" (click)="deleteArticle()">Supprimer</button>
         </div>
     </div>
     <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>
