@@ -11,6 +11,6 @@ router.get("/:idArticle", ctrlArticles.getOneArticleWithId);
 router.get("/all/:idUtil", ctrlArticles.getAllArticlesForOneUser);
 router.delete("/:idArticle", ctrlArticles.deleteArticle);
 router.put("/:idArticle", ctrlArticles.modifyArticle);
-router.post("/", multer, ctrlArticles.createArticle);
+router.post("/", ctrlArticles.createArticle);
 
 module.exports = router;

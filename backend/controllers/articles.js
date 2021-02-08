@@ -145,14 +145,14 @@ exports.createArticle = function (req, res) {
     if (photo == null && texte == null) {
         res.status(500).json({ erreur: "Les données de l'article ne peuvent être nulles !" });
     } else {
-        const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        //const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         connexion.query(sqlRecupInfosUtil, [uuidUtil], function (err, rows, fields) {
             if (err) {
                 res.status(500).json({ erreur: "La requête est incorrecte !" });
             } else {
                 try {
                     idUtil = rows[0].id_util;
-                    connexion.query(sqlCreationArticle, [idUtil, dateCreation, imageUrl, texte, nbCommentaires, uuidUtil, uuidArticle], function (err, rows, fields) {
+                    connexion.query(sqlCreationArticle, [idUtil, dateCreation, photo, texte, nbCommentaires, uuidUtil, uuidArticle], function (err, rows, fields) {
                         if (err) {
                             res.status(500).json({ erreur: "La requête est incorrecte !" });
                         } else {

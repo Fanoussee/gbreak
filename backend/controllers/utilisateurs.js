@@ -28,6 +28,7 @@ exports.connectUser = function(req, res){
                                                { expiresIn: '24h' }
                                            ),
                                            message: "L'utilisateur existe et le mot de passe est correct !" });
+                    
                 }
             }).catch(error => {
                 return res.status(500).json({ erreur: "L'authentification a échouée ! " + error });
