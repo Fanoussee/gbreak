@@ -44,15 +44,14 @@ export class InscriptionComponent implements OnInit {
     const email = this.inscriptionForm.get('email').value;
     const mot_passe = this.inscriptionForm.get('mot_passe').value;
     const newUser = new Utilisateur(nom, prenom, date_naiss, moderateur, email, mot_passe);
-    console.log(newUser);
     if(this.donneesValides(newUser)){
       this.utilisateursService.createUtilisateur(newUser).subscribe(
         () => {
-          this.authService.isAuth = true;
+          this.authService.setAuth(true);
           this.router.navigate(['/utilisateurs']);
         },
         (error) => {
-          this.authService.isAuth = false;
+          this.authService.setAuth(false);
           this.msgErreur = error.error.erreur;
         }
       );

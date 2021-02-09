@@ -18,10 +18,10 @@ import { UtilisateursListComponent } from './utilisateurs-list/utilisateurs-list
 import { UtilisateursService } from './services/utilisateurs.service';
 
 const appRoutes : Routes = [
-  { path: 'articles', component: ArticleListComponent },
-  { path: 'articles/new', component: NewArticleComponent },
-  { path: 'articles/:uuid_article', component: SingleArticleComponent },
-  { path: 'utilisateurs', component: UtilisateursListComponent},
+  { path: 'articles', canActivate: [AuthGuard], component: ArticleListComponent },
+  { path: 'articles/new', canActivate: [AuthGuard], component: NewArticleComponent },
+  { path: 'articles/:uuid_article', canActivate: [AuthGuard], component: SingleArticleComponent },
+  { path: 'utilisateurs', canActivate: [AuthGuard], component: UtilisateursListComponent},
   { path: 'connexion', component: ConnexionComponent },
   { path: 'inscription', component: InscriptionComponent },
   { path: '', component: ConnexionComponent },

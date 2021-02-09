@@ -13,15 +13,20 @@ export class HeaderComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    
+    this.isAuth = this.authService.getAuth();
   }
 
   onDeconnexion() {
     this.authService.deconnexion();
+    this.isAuth = false;
+  }
+
+  getIsAuth(){
+    return this.authService.getAuth();
   }
 
   setIsAuth(value: boolean){
-    this.isAuth = value;
+    this.isAuth = this.authService.getAuth();
   }
   
 }

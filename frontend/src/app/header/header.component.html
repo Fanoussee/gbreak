@@ -9,19 +9,19 @@
       <a routerLinkActive="active" 
          class="nav-link navbar-brand" 
          routerLink="inscription"
-         >
+         *ngIf="!getIsAuth()">
         Inscription
       </a>
       <a routerLinkActive="active"
          class="nav-link navbar-brand" 
          routerLink="connexion"
-         >
+         *ngIf="!getIsAuth()">
         Connexion
       </a>
-      <a class="nav-link navbar-brand" 
-         *ngIf="isAuth"
+      <button class="btn btn-danger nav-link navbar-brand"
+         *ngIf="getIsAuth()"
          (click)="onDeconnexion()">
         Déconnexion
-      </a>
+    </button>
     </div>
   </nav>

@@ -1,8 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HeaderComponent } from 'src/app/header/header.component';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -19,7 +17,6 @@ export class ConnexionComponent implements OnInit {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private http: HttpClient,
     private authService: AuthService){}
 
   ngOnInit() {
@@ -37,13 +34,13 @@ export class ConnexionComponent implements OnInit {
     const email = this.connexionForm.get('email').value;
     const mot_passe = this.connexionForm.get('mot_passe').value;
     if (this.donneesValides(email, mot_passe)) {
-      this.http.post(this.urlUtilisateurs, {email, mot_passe}).subscribe(
+      this.authService.connexion(email, mot_passe).subscribe(
         () => {
-          this.authService.isAuth = true;
+          this.authService.setAuth(true);
           this.router.navigate(['/articles']);
         },
         (error) => {
-          this.authService.isAuth = false;
+          this.authService.setAuth(false);
           this.msgErreur = error.error.erreur;
         }
       );
@@ -59,7 +56,6 @@ export class ConnexionComponent implements OnInit {
 
   onDeconnexion() {
     this.authService.deconnexion();
-    this.authService.isAuth = false;
   }
 
   private donneesValides(email: string, mot_passe: string) {
