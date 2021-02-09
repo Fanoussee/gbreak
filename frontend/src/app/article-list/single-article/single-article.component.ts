@@ -41,7 +41,7 @@ export class SingleArticleComponent implements OnInit {
           this.router.navigate(['/articles']);
         },
         (error) => {
-          this.msgErreur = JSON.stringify(error);
+          this.msgErreur = error.error.erreur;
         }
       );
     }

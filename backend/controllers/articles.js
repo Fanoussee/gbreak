@@ -92,8 +92,18 @@ exports.deleteArticle = function (req, res) {
         } else {
             try {
                 result = rows[0].uuid_article;
-                const imageUrl = rows[0].photo.split('http://localhost:3000/images/')[1];
-                fs.unlink(`images/${imageUrl}`, () => {
+                if(rows[0].photo != null){
+                    const imageUrl = rows[0].photo.split('http://localhost:3000/images/')[1];
+                    fs.unlink(`images/${imageUrl}`, () => {
+                        connexion.query(sql2, [uuidArticle], function (err, rows, fields) {
+                            if (err) {
+                                res.status(500).json({ erreur: "La requête est incorrecte !" });
+                            } else {
+                                res.status(200).json({ message: "L'article a été supprimé !" });
+                            }
+                        });
+                    });
+                }else{
                     connexion.query(sql2, [uuidArticle], function (err, rows, fields) {
                         if (err) {
                             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -101,7 +111,7 @@ exports.deleteArticle = function (req, res) {
                             res.status(200).json({ message: "L'article a été supprimé !" });
                         }
                     });
-                });
+                }
             } catch (error) {
                 res.status(500).json({ erreur: "L'article n'existe pas !" });
             }
@@ -158,8 +168,10 @@ exports.createArticle = function (req, res) {
             } else {
                 try {
                     idUtil = rows[0].id_util;
-                    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-                    connexion.query(sqlCreationArticle, [idUtil, dateCreation, imageUrl, texte, nbCommentaires, uuidUtil, uuidArticle], function (err, rows, fields) {
+                    if(photo != null){
+                        photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+                    }
+                    connexion.query(sqlCreationArticle, [idUtil, dateCreation, photo, texte, nbCommentaires, uuidUtil, uuidArticle], function (err, rows, fields) {
                         if (err) {
                             res.status(500).json({ erreur: "La requête est incorrecte !" });
                         } else {

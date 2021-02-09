@@ -34,7 +34,10 @@ export class NewArticleComponent implements OnInit {
   }
 
   onAjouterArticle() {
-    const photo = this.image.name;
+    let photo = null;
+    if (this.image != null) {
+      photo = this.image.name;
+    }
     const texte = this.articleForm.get('texte').value;
     const uuid_util = "9032306b-2b12-41d7-b1f9-fa1ecd61b52d";
     const newArticle = new Article(uuid_util, photo, texte);
@@ -51,6 +54,7 @@ export class NewArticleComponent implements OnInit {
       this.msgErreur = "Un article doit contenir soit une photo, soit un texte, soit les deux."
         + " Les informations saisies doivent contenir au moins 2 caractères.";
     }
+
   }
 
   onResetForm() {
@@ -81,9 +85,9 @@ export class NewArticleComponent implements OnInit {
   private donneesValides(article: Article) {
     if (article.photo == null && article.texte == null) {
       return false;
-    }else if (article.texte == null) {
+    } else if (article.texte == null) {
       return true;
-    }else{
+    } else {
       return this.verifTailleString(article.texte, 2);
     }
   }
