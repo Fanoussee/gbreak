@@ -1,5 +1,4 @@
-<div class="col-6">
-
+<div class="col-6" *ngIf="!modify">
     <h2 class="m-4 bg-light">Détail de l'article</h2>
     <div class="card m-2 bg-light">
         <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}" alt="">
@@ -22,16 +21,49 @@
             </div>
         </div>
         <div class="card-text text-right">
-            <button class="btn btn-primary m-4" (click)="changeModify()">Modifier</button>
-            <button class="btn btn-danger m-4" (click)="deleteArticle()">Supprimer</button>
-
+            <button class="btn btn-primary m-4" (click)="onChangeModify()">Modifier</button>
+            <button class="btn btn-danger m-4" (click)="onDeleteArticle()">Supprimer</button>
         </div>
     </div>
     <div class="row">
         <div class="col-10">
             <button class="btn btn-primary mt-4" routerLink="/articles">Retour à la liste des articles</button>
         </div>
-        <div class="col-2 d-flex justify-content-end">
+    </div>
+    <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>
+</div>
+
+<div class="col-6" *ngIf="modify">
+    <h2 class="m-4 bg-light">Modifier l'article</h2>
+    <div class="card">
+        <form [formGroup]="articleForm">
+            <div class="form-group">
+                <img class="card-img-top" *ngIf="imageUrl == null" src="{{ article.photo }}" alt="">
+            </div>
+            <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()">Modifier l'image</button>
+            <div class="form-group">
+                <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
+                <div class="image-preview" *ngIf="imageUrl != null">
+                    <img id="" [src]="imageUrl" alt="">
+                </div>
+            </div>
+            <textarea 
+                class="form-control mt-4 mb-4" 
+                type="text-area" 
+                id="texteModifie" 
+                formControlName="texteModifie">
+            </textarea>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" (click)="onModifyArticle()">Modifier l'article</button>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-12 text-right">
+            <button 
+                class="btn btn-danger mt-4 mb-4 btn-lg" 
+                routerLink="/articles/{{uuid_article}}"
+                (click)="onChangeModify()">
+                Annuler la modification
+            </button>
         </div>
     </div>
     <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>

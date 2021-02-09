@@ -5,9 +5,9 @@ const fs = require('fs');
 //Requête pour obtenir tous les articles : fonctionne
 exports.getAllArticles = function (req, res) {
     const sql = "SELECT uuid_article, nom, prenom, date_heure, photo, texte, nb_commentaires "
-                + "FROM Article, Utilisateur "
-                + "WHERE article.uuid_util=utilisateur.uuid_util"
-;
+        + "FROM Article, Utilisateur "
+        + "WHERE article.uuid_util=utilisateur.uuid_util "
+        + "ORDER BY date_heure DESC";
     connexion.query(sql, function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -19,10 +19,10 @@ exports.getAllArticles = function (req, res) {
 
 //Requête pour obtenir un article avec son identifiant uuid : fonctionne
 exports.getOneArticleWithId = function (req, res) {
-    const sql = "SELECT uuid_article, nom, prenom, date_heure, photo, texte, nb_commentaires "
-                + "FROM Article, Utilisateur "
-                + "WHERE article.uuid_util=utilisateur.uuid_util AND uuid_article=?"
-;
+    const sql = "SELECT uuid_article, article.uuid_util, nom, prenom, date_heure, photo, texte, nb_commentaires "
+        + "FROM Article, Utilisateur "
+        + "WHERE article.uuid_util=utilisateur.uuid_util AND uuid_article=?"
+        ;
     const uuidArticle = req.params.idArticle;
     let result = 0;
     connexion.query(sql, [uuidArticle], function (err, rows, fields) {
@@ -45,9 +45,9 @@ exports.getOneArticleWithId = function (req, res) {
 exports.getAllArticlesForOneUser = function (req, res) {
     const sql1 = "SELECT uuid_util FROM Utilisateur WHERE uuid_util=?";
     const sql2 = "SELECT uuid_article, nom, prenom, date_heure, photo, texte, nb_commentaires "
-                 + "FROM Article "
-                 + "WHERE uuid_util=?"
-;
+        + "FROM Article "
+        + "WHERE uuid_util=?"
+        ;
     const uuidUtil = req.params.idUtil;
     let result = 0;
     connexion.query(sql1, [uuidUtil], function (err, rows, fields) {
@@ -92,7 +92,7 @@ exports.deleteArticle = function (req, res) {
         } else {
             try {
                 result = rows[0].uuid_article;
-                if(rows[0].photo != null){
+                if (rows[0].photo != null) {
                     const imageUrl = rows[0].photo.split('http://localhost:3000/images/')[1];
                     fs.unlink(`images/${imageUrl}`, () => {
                         connexion.query(sql2, [uuidArticle], function (err, rows, fields) {
@@ -103,7 +103,7 @@ exports.deleteArticle = function (req, res) {
                             }
                         });
                     });
-                }else{
+                } else {
                     connexion.query(sql2, [uuidArticle], function (err, rows, fields) {
                         if (err) {
                             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -121,10 +121,24 @@ exports.deleteArticle = function (req, res) {
 
 //Requête pour modifier un article : fonctionne
 exports.modifyArticle = function (req, res) {
+    const uuidArticle = req.params.idArticle;
+    let photo = null;
+    let texte = null;
+    try {
+        const reqBody = JSON.parse(JSON.stringify(req.body));
+        const article = JSON.parse(reqBody.article);
+        texte = article.texte;
+        photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    } catch (error) {
+        texte = req.body.texte;
+        photo = req.body.photo;
+    }
+    const values = {
+        "photo": photo,
+        "texte": texte
+    };
     const sql1 = 'SELECT * FROM Article WHERE uuid_article=?';
     const sql2 = 'UPDATE Article SET ? WHERE uuid_article=?';
-    const uuidArticle = req.params.idArticle;
-    const values = req.body;
     let result = 0;
     connexion.query(sql1, [uuidArticle], function (err, rows, fields) {
         if (err) {
@@ -132,13 +146,28 @@ exports.modifyArticle = function (req, res) {
         } else {
             try {
                 result = rows[0].uuid_article;
-                connexion.query(sql2, [values, uuidArticle], function (err, rows, fields) {
-                    if (err) {
-                        res.status(500).json({ erreur: "La requête est incorrecte ! " });
-                    } else {
-                        res.status(200).json({ message: "L'article a été modifié !" });
-                    }
-                });
+                
+                try {
+                    const imageUrl = rows[0].photo.split('http://localhost:3000/images/')[1];
+                    fs.unlink(`images/${imageUrl}`, () => {
+                        connexion.query(sql2, [values, uuidArticle], function (err, rows, fields) {
+                            if (err) {
+                                res.status(500).json({ erreur: "La requête est incorrecte ! " });
+                            } else {
+                                res.status(200).json({ message: "L'article a été modifié !" });
+                            }
+                        });    
+                    });
+                } catch (error) {
+                    connexion.query(sql2, [values, uuidArticle], function (err, rows, fields) {
+                        if (err) {
+                            res.status(500).json({ erreur: "La requête est incorrecte ! " });
+                        } else {
+                            res.status(200).json({ message: "L'article a été modifié !" });
+                        }
+                    });
+                    
+                }
             } catch (error) {
                 res.status(500).json({ erreur: "L'article n'existe pas !" });
             }
@@ -152,7 +181,7 @@ exports.createArticle = function (req, res) {
     const article = JSON.parse(reqBody.article);
     const uuidArticle = uuidV4();
     const uuidUtil = article.uuid_util;
-    const photo = article.photo;
+    let photo = article.photo;
     const texte = article.texte;
     let dateCreation = new Date();
     const nbCommentaires = 0;
@@ -168,7 +197,7 @@ exports.createArticle = function (req, res) {
             } else {
                 try {
                     idUtil = rows[0].id_util;
-                    if(photo != null){
+                    if (photo != null) {
                         photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
                     }
                     connexion.query(sqlCreationArticle, [idUtil, dateCreation, photo, texte, nbCommentaires, uuidUtil, uuidArticle], function (err, rows, fields) {
