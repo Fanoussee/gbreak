@@ -22,10 +22,11 @@ export class SingleArticleComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.article = new Article("", "", "");
     this.uuid_article = this.route.snapshot.params['uuid_article'];
     this.articleService.getArticleById(this.uuid_article).subscribe(
       (article: Article) => {
-        this.article = article;
+        this.article = article[0];
       },
       (error) => {
         this.msgErreur = JSON.stringify(error);

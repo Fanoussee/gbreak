@@ -1,29 +1,37 @@
-<div *ngFor="let article of article">
-    <h2 class="m-4">Détail de l'article</h2>
-    <ul class="list-group">
-        <li class="list-group-item">
-            <div class="row justify-content-between">
-                <div class="col-6 ">Créé par : {{ article.nom }} {{ article.prenom }}</div>
-                <div class="col-6 text-secondary text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm a'}}
+<div class="col-6">
+
+    <h2 class="m-4 bg-light">Détail de l'article</h2>
+    <div class="card m-2 bg-light">
+        <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}" alt="">
+        <div class="card-body">
+            <div class="card-title p-2 justify-content-between">
+                <div class="row">
+                    <div class="col-6">Créé par : <span class="font-weight-bold">{{ article.nom }} {{ article.prenom
+                            }}</span></div>
+                    <div class="font-italic col-6 text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
+                    </div>
                 </div>
             </div>
-        </li>
-        <li class="list-group-item">
-            <p>{{ article.photo }}</p>
-            <p class="text-dark">{{ article.texte }}</p>
-        </li>
-        <li class="list-group-item">
-            <p>Nombre de commentaires : {{ article.nb_commentaires }}</p>
-        </li>
-    </ul>
-
-    <div class="row">
-        <div class="col-6">
-            <button class="btn btn-primary mt-4" routerLink="/articles">Retour à la liste des articles</button>
+            <div [ngClass]="{'card-text' : true,
+                             'border-top' : article.texte != null,
+                             'border-info' : true }">
+                <p class="text-dark font-weight-bold mt-3" *ngIf="article.texte != null">{{ article.texte }}</p>
+            </div>
+            <div class="card-text border-bottom border-top border-info">
+                <p class="font-italic">Nombre de commentaires : {{ article.nb_commentaires }}</p>
+            </div>
         </div>
-        <div class="col-6 d-flex justify-content-end">
+        <div class="card-text text-right">
             <button class="btn btn-primary m-4" (click)="changeModify()">Modifier</button>
             <button class="btn btn-danger m-4" (click)="deleteArticle()">Supprimer</button>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <button class="btn btn-primary mt-4" routerLink="/articles">Retour à la liste des articles</button>
+        </div>
+        <div class="col-2 d-flex justify-content-end">
         </div>
     </div>
     <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>

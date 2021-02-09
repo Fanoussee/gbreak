@@ -5,13 +5,16 @@
      [routerLink]="[article.uuid_article]">
      <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}" alt="">
     <div class="card-body">
-        <div class="card-title p-2justify-content-between">
+        <div class="card-title p-2 justify-content-between">
             <div class="row">
                 <div class="col-6">Créé par : <span class="font-weight-bold">{{ article.nom }} {{ article.prenom }}</span></div>
                 <div class="font-italic col-6 text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
             </div>
         </div>
-        <div class="card-text  border-bottom border-top border-info">
+        <div [ngClass]="{'card-text': true,
+                         'border-bottom': true,
+                         'border-top': article.texte != null,
+                         'border-info': true }">
             <p class="text-dark font-weight-bold mt-3" *ngIf="article.texte != null">{{ article.texte }}</p>
         </div>
         <div class="card-text">

@@ -3,6 +3,7 @@ export class Article {
     nom: string;
     prenom: string;
     date_heure: Date;
+    nb_commentaires: number;
 
     constructor(
         public uuid_util: string,
