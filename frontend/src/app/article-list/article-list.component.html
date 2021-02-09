@@ -3,9 +3,7 @@
 <div class="card m-2 stretched-link bg-light"
      *ngFor="let article of articles"
      [routerLink]="[article.uuid_article]">
-    <div>
-        <p class="border-bottom border-secondary" *ngIf="article.photo != null">{{ article.photo }}</p>
-    </div>
+     <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}" alt="">
     <div class="card-body">
         <div class="card-title p-2justify-content-between">
             <div class="row">

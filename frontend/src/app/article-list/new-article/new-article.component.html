@@ -3,8 +3,11 @@
         <h2>Ajouter un article</h2>
         <form [formGroup]="articleForm" (ngSubmit)="onAjouterArticle()">
             <div class="form-group">
-                <label for="photo">Photo</label>
-                <input type="text" id="photo" class="form-control" formControlName="photo">
+                <button class="btn btn-success" type="button" (click)="filePicker.click()">Ajouter image</button>
+                <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
+                <div class="image-preview" >
+                    <img id="" [src]="imageUrl" alt="">
+                </div>
             </div>
             <div class="form-group">
                 <label for="texte">Texte</label>

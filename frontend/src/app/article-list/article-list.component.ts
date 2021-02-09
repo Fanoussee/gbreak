@@ -26,7 +26,4 @@ export class ArticleListComponent implements OnInit {
     );
   }
 
-  ajouterArticle(){
-    console.log("J'ai ajouté un article !");
-  }
 }

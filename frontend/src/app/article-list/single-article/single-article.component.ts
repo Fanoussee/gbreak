@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
 import { Article } from 'src/app/models/Article.model';
 import { ArticlesService } from 'src/app/services/articles.service';
 
