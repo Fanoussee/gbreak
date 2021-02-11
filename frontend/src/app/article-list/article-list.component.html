@@ -1,24 +1,59 @@
-<h2 class="m-4 bg-light">Liste des articles</h2>
-<button class="btn btn-success" routerLink="new">Ajouter un article</button>
-<div class="card m-2 stretched-link bg-light"
-     *ngFor="let article of articles"
-     [routerLink]="[article.uuid_article]">
-     <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}" alt="">
-    <div class="card-body">
-        <div class="card-title p-2 justify-content-between">
-            <div class="row">
-                <div class="col-6">Créé par : <span class="font-weight-bold">{{ article.nom }} {{ article.prenom }}</span></div>
-                <div class="font-italic col-6 text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}</div>
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            <h2 class="mt-5 mb-4 bg-light">Liste des articles</h2>
+            <div class="mb-5 mt-5" *ngFor="let article of articles; let i = index">
+                <div class="card bg-light" [routerLink]="[article.uuid_article]">
+                    <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}" alt="">
+                    <div class="card-body">
+                        <div class="card-title p-2 justify-content-between">
+                            <div class="row">
+                                <div class="col-6">Créé par : <span class="font-weight-bold">{{ article.nom }} {{ article.prenom
+                                        }}</span></div>
+                                <div class="font-italic col-6 text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
+                                </div>
+                            </div>
+                        </div>
+                        <div [ngClass]="{'card-text': true,
+                                         'border-top': article.texte != null,
+                                         'border-info': true }">
+                            <p class="text-dark font-weight-bold mt-3" *ngIf="article.texte != null">{{ article.texte }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-0">
+                    <div class="col-12 bg-primary mb-3">
+                        <div class="row justify-content-between align-middle">
+                            <h5 class="text-white ml-3 pt-3">Commentaires : {{ article.nb_commentaires }}</h5>
+                            <button class="btn btn-primary" type="button" (click)="afficherCommentaires(i)">
+                                <fa-icon [icon]="faArrowDown" class="mr-2 ml-2 fa-2x" *ngIf="!affCommentaires"></fa-icon>
+                                <fa-icon [icon]="faArrowUp" class="mr-2 ml-2 fa-2x" *ngIf="affCommentaires"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12" *ngIf="affCommentaires">
+                        <p *ngIf="article.commentaires.length === 0">Il n'y a pas de commentaire !</p>
+                        <div *ngFor="let commentaire of commentairesArticleActif">
+                            <div class="d-flex justify-content-center">
+                                    <fa-icon [icon]="faAngleRight" class="flex-grow mr-2"></fa-icon>
+                                    <p class="align-text-bottom flex-grow mr-2 font-weight-bold">
+                                        {{ commentaire.prenom }} {{ commentaire.nom }}
+                                    </p>
+                                    <p class="flex-grow-1 mr-2 align-text-bottom text-left">
+                                        - {{ commentaire.commentaire }}
+                                    </p>
+                                    <p class="flex-grow font-italic text-secondary">
+                                        {{ commentaire.date_commentaire | date: "dd/MM/yyyy - hh:mm a" }}
+                                    </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div [ngClass]="{'card-text': true,
-                         'border-bottom': true,
-                         'border-top': article.texte != null,
-                         'border-info': true }">
-            <p class="text-dark font-weight-bold mt-3" *ngIf="article.texte != null">{{ article.texte }}</p>
-        </div>
-        <div class="card-text">
-            <p class="font-italic">Nombre de commentaires : {{ article.nb_commentaires }}</p>
+        <div class="col-3">
+            <button class="position-fixed mt-5 btn btn-success btn-lg" routerLink="new">Ajouter un article</button>
         </div>
     </div>
+    <p>{{ msgErreur }}</p>
 </div>

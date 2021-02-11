@@ -16,6 +16,7 @@ import { NewArticleComponent } from './article-list/new-article/new-article.comp
 import { HeaderComponent } from './header/header.component';
 import { UtilisateursListComponent } from './utilisateurs-list/utilisateurs-list.component';
 import { UtilisateursService } from './services/utilisateurs.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const appRoutes : Routes = [
   { path: 'articles', canActivate: [AuthGuard], component: ArticleListComponent },
@@ -24,7 +25,7 @@ const appRoutes : Routes = [
   { path: 'utilisateurs', canActivate: [AuthGuard], component: UtilisateursListComponent},
   { path: 'connexion', component: ConnexionComponent },
   { path: 'inscription', component: InscriptionComponent },
-  { path: '', component: ConnexionComponent },
+  { path: '', component: ArticleListComponent },
   { path: '**', component: ConnexionComponent }
 ];
 
@@ -44,7 +45,8 @@ const appRoutes : Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    FontAwesomeModule
   ],
   providers: [
     ArticlesService,
