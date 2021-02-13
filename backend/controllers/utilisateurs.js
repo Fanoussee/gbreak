@@ -21,7 +21,7 @@ exports.connectUser = function(req, res){
                                            prenom: rows[0].prenom,
                                            date_naiss: rows[0].date_naiss,
                                            email,
-                                           mot_passe,
+                                           mot_passe: rows[0].mot_passe,
                                            moderateur : rows[0].moderateur,
                                            token: jwt.sign(
                                                { uuid_util: rows[0].uuid_util },

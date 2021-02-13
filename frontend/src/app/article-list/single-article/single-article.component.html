@@ -1,37 +1,60 @@
-<div class="col-6" *ngIf="!modify">
-    <h2 class="m-4 bg-light">Détail de l'article</h2>
-    <div class="card m-2 bg-light">
-        <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}" alt="">
-        <div class="card-body">
-            <div class="card-title p-2 justify-content-between">
-                <div class="row">
-                    <div class="col-6">Créé par : <span class="font-weight-bold">{{ article.nom }} {{ article.prenom
-                            }}</span></div>
-                    <div class="font-italic col-6 text-right">Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
+<div class="row" *ngIf="!modify">
+    <div class="col-3 mt-5" *ngIf="rightToModify || rightToDelete">
+        <div class="d-flex flex-column justify-content-center">
+            <button class="btn btn-primary m-2" *ngIf="rightToModify" (click)="onChangeModify()">
+                Modifier l'article
+            </button>
+            <button class="btn btn-danger m-2 mb-4" *ngIf="rightToDelete" (click)="onDeleteArticle()">
+                Supprimer l'article
+            </button>
+        </div>
+    </div>
+
+    <div [ngClass]="{'col-9': rightToDelete || rightToModify,
+    'col-12': !rightToDelete && !rightToModify}">
+        <div class="card m-4">
+            <div class="row no-gutters">
+                <div class="col-6 border-right bg-light">
+                    <div class="card-body">
+                        <p class="card-text font-italic">
+                            <small class="text-muted">
+                                Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
+                            </small>
+                        </p>
+                        <p class="text-dark text-justify font-weight-bold">{{ article.texte }}</p>
+                        <p class="card-title text-right">
+                            {{ article.prenom }} {{ article.nom }}
+                        </p>
+                        <p class="card-text border-top">
+                            <small class="text-muted">
+                                Commentaires : {{ article.nb_commentaires }}
+                            </small>
+                        </p>
                     </div>
                 </div>
+                <div class="col-6 border text-center align-text-bottom">
+                    <p class="mt-4" *ngIf="article.photo == null">Votre article n'a pas de photo !</p>
+                    <fa-icon [icon]="faImage" class="fa-5x text-primary" *ngIf="article.photo == null"></fa-icon>
+                    <img class="card-img" src="{{ article.photo }}" alt="">
+                </div>
             </div>
-            <div [ngClass]="{'card-text' : true,
-                             'border-top' : article.texte != null,
-                             'border-info' : true }">
-                <p class="text-dark font-weight-bold mt-3" *ngIf="article.texte != null">{{ article.texte }}</p>
-            </div>
-            <div class="card-text border-bottom border-top border-info">
-                <p class="font-italic">Nombre de commentaires : {{ article.nb_commentaires }}</p>
-            </div>
-        </div>
-        <div class="card-text text-right">
-            <button class="btn btn-primary m-4" (click)="onChangeModify()">Modifier</button>
-            <button class="btn btn-danger m-4" (click)="onDeleteArticle()">Supprimer</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-10">
-            <button class="btn btn-primary mt-4" routerLink="/articles">Retour à la liste des articles</button>
-        </div>
-    </div>
-    <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>
 </div>
+
+<div class="row mt-2" *ngIf="msgErreur != null">
+    <div class="col-12">
+            <p class="text-danger">Erreur : {{ msgErreur }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <app-commentaire [uuid_article]="uuid_article"></app-commentaire>
+    </div>
+</div>
+
+
 
 <div class="col-6" *ngIf="modify">
     <h2 class="m-4 bg-light">Modifier l'article</h2>
@@ -40,27 +63,33 @@
             <div class="form-group">
                 <img class="card-img-top" *ngIf="imageUrl == null" src="{{ article.photo }}" alt="">
             </div>
-            <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()">Modifier l'image</button>
+            <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
+                *ngIf="article.photo != null">
+                Modifier l'image
+            </button>
+            <button class="btn btn-danger btn-block btn-lg" type="button" (click)="onDeletePhoto()"
+                *ngIf="article.photo != null">
+                Supprimer l'image
+            </button>
+            <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
+                *ngIf="article.photo == null">
+                Ajouter une image
+            </button>
             <div class="form-group">
                 <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
                 <div class="image-preview" *ngIf="imageUrl != null">
                     <img id="" [src]="imageUrl" alt="">
                 </div>
             </div>
-            <textarea 
-                class="form-control mt-4 mb-4" 
-                type="text-area" 
-                id="texteModifie" 
-                formControlName="texteModifie">
+            <textarea class="form-control mt-4 mb-4" type="text-area" id="texteModifie" formControlName="texteModifie">
             </textarea>
-            <button type="submit" class="btn btn-primary btn-block btn-lg" (click)="onModifyArticle()">Modifier l'article</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" (click)="onModifyArticle()">Modifier
+                l'article</button>
         </form>
     </div>
     <div class="row">
         <div class="col-12 text-right">
-            <button 
-                class="btn btn-danger mt-4 mb-4 btn-lg" 
-                routerLink="/articles/{{uuid_article}}"
+            <button class="btn btn-danger mt-4 mb-4 btn-lg" routerLink="/articles"
                 (click)="onChangeModify()">
                 Annuler la modification
             </button>

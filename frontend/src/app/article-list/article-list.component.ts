@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Article } from '../models/Article.model';
 import { ArticlesService } from '../services/articles.service';
-import { faArrowCircleUp, faArrowCircleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { Commentaire } from '../models/Commentaire.model';
+import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { CommentairesService } from '../services/commentaires.service';
+import { Commentaire } from '../models/Commentaire.model';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-article-list',
@@ -12,19 +13,19 @@ import { CommentairesService } from '../services/commentaires.service';
 })
 export class ArticleListComponent implements OnInit {
 
-  faArrowDown = faArrowCircleDown;
-  faArrowUp = faArrowCircleUp;
-  faAngleRight = faAngleRight;
+  faArrowRight = faArrowCircleRight;
 
   articles: Article[];
   msgErreur: string = null;
-  affCommentaires: boolean = false;
-  commentairesArticleActif: Commentaire[];
   nbCommentaires: number ;
+  infosUtilActif: any;
+  rightToModify: boolean;
+  rightToDelete: boolean;
 
   constructor(
-    private articlesService: ArticlesService,
-    private commentairesServices: CommentairesService
+    private articlesService: ArticlesService, 
+    private commentairesServices : CommentairesService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -34,6 +35,7 @@ export class ArticleListComponent implements OnInit {
         this.articles.forEach(element => {
           this.commentairesServices.getCommentairesByUuidArticle(element.uuid_article).subscribe(
             (commentaires: Commentaire[]) => {
+              this.infosUtilActif = this.authService.getInfosUtilActif();
               element.commentaires = commentaires;
               element.nb_commentaires = element.commentaires.length;
             },
@@ -47,11 +49,6 @@ export class ArticleListComponent implements OnInit {
         this.msgErreur = error.error.erreur;
       }
     );
-  }
-  
-  afficherCommentaires(index){
-    this.affCommentaires = !this.affCommentaires;
-    this.commentairesArticleActif = this.articles[index].commentaires;
   }
 
 }

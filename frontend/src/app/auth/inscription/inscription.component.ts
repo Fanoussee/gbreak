@@ -48,7 +48,7 @@ export class InscriptionComponent implements OnInit {
       this.utilisateursService.createUtilisateur(newUser).subscribe(
         () => {
           this.authService.setAuth(true);
-          this.router.navigate(['/utilisateurs']);
+          this.router.navigate(['/articles']);
         },
         (error) => {
           this.authService.setAuth(false);

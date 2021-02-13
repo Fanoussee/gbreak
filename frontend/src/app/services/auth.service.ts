@@ -1,17 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Subject } from "rxjs";
-import { Utilisateur } from "../models/Utilisateur.model";
 
 @Injectable()
 
 export class AuthService {
-    private isAuth = true;
+    private isAuth = false;
     messErreur = "";
-
-    utilisateurs = new Subject<Utilisateur[]>();
     urlUtilisateurs = 'http://localhost:3000/api/utilisateurs/connexion';
+    private infosUtilisateurActif : any;
 
     constructor(
         private http: HttpClient,
@@ -19,6 +16,14 @@ export class AuthService {
     ) { }
 
     connexion(email, mot_passe){
+        this.http.post(this.urlUtilisateurs, { email, mot_passe }).subscribe(
+            (infos: any) => {
+                this.infosUtilisateurActif = infos;
+            },
+            (err) => {
+                this.messErreur = err;
+            }
+        );
         return this.http.post(this.urlUtilisateurs, {email, mot_passe});
     }
 
@@ -33,6 +38,10 @@ export class AuthService {
 
     setAuth(value: boolean){
         this.isAuth = value;
+    }
+
+    getInfosUtilActif(){
+        return this.infosUtilisateurActif;
     }
     
 }

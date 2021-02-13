@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Article } from 'src/app/models/Article.model';
 import { ArticlesService } from 'src/app/services/articles.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-new-article',
@@ -16,14 +17,17 @@ export class NewArticleComponent implements OnInit {
   msgErreur: string = null;
   image: File = null;
   imageUrl: string = null;
+  infosUtilActif: any;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private articlesService: ArticlesService) { }
+    private articlesService: ArticlesService,
+    private authService: AuthService) { }
 
   ngOnInit() {
     this.initForm();
+    this.infosUtilActif = this.authService.getInfosUtilActif();
   }
 
   initForm() {
@@ -39,7 +43,7 @@ export class NewArticleComponent implements OnInit {
       photo = this.image.name;
     }
     const texte = this.articleForm.get('texte').value;
-    const uuid_util = "9032306b-2b12-41d7-b1f9-fa1ecd61b52d";
+    const uuid_util = this.infosUtilActif.uuid_util;
     const newArticle = new Article(uuid_util, photo, texte);
     if (this.donneesValides(newArticle)) {
       this.articlesService.createArticle(newArticle, this.image).subscribe(

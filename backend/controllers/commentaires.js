@@ -23,7 +23,7 @@ exports.getAllComments = function (req, res) {
 exports.getAllCommentsByIdArticle = function (req, res) {
     const uuidArticle = req.params.idArticle;
     const sql1 = 'SELECT * FROM Article WHERE uuid_Article=?';
-    const sql2 = "SELECT Commentaire.uuid_util, nom, prenom, date_commentaire, commentaire, Commentaire.uuid_article "
+    const sql2 = "SELECT Commentaire.uuid_util, nom, prenom, date_commentaire, commentaire, Commentaire.uuid_article , uuid_commentaire "
         + "FROM Utilisateur, Commentaire "
         + "WHERE Commentaire.uuid_util = Utilisateur.uuid_util AND Commentaire.uuid_article=? "
         + "ORDER BY date_commentaire";

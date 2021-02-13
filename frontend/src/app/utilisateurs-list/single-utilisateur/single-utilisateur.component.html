@@ -1,0 +1,13 @@
+<h2 class="mt-5 mb-4 bg-light">Mon compte</h2>
+<p>Nom : <span class="font-weight-bold">{{ infosUtilisateurActif.nom }}</span></p>
+<p>Prénom : <span class="font-weight-bold">{{ infosUtilisateurActif.prenom }}</span></p>
+<p>Date de naissance : <span class="font-weight-bold">{{ infosUtilisateurActif.date_naiss | date: "dd/MM/yyyy" }}</span></p>
+<p>Adresse email : <span class="font-weight-bold">{{ infosUtilisateurActif.email }}</span></p>
+<button class="btn btn-success mr-2">Modifier</button>
+<button 
+    class="btn btn-danger" 
+    routerLink="connexion" 
+    (click)="onDeleteUtilisateur()"
+    *ngIf="!moderateur">
+    Supprimer
+</button>

@@ -1,27 +1,27 @@
 <nav class="nav navbar nav-pills justify-content-between bg-light sticky-top">
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="articles">
-      Articles
+  <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="articles">
+    Accueil : liste des articles
+  </a>
+  <div class="nav">
+    <div class="nav-link navbar-brand" *ngIf="getIsAuth()">
+      Bonjour {{ prenom }} <span *ngIf="getIsAuth() && moderateur == 1" id="moderateur">(modérateur)</span>
+    </div>
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="profil" *ngIf="getIsAuth()">
+      Voir mon compte
     </a>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="utilisateurs">
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="utilisateurs"
+      *ngIf="getIsAuth() && moderateur == 1">
       Utilisateurs
     </a>
-    <div class="nav">
-      <a routerLinkActive="active" 
-         class="nav-link navbar-brand" 
-         routerLink="inscription"
-         *ngIf="!getIsAuth()">
-        Inscription
-      </a>
-      <a routerLinkActive="active"
-         class="nav-link navbar-brand" 
-         routerLink="connexion"
-         *ngIf="!getIsAuth()">
-        Connexion
-      </a>
-      <button class="btn btn-danger nav-link navbar-brand"
-         *ngIf="getIsAuth()"
-         (click)="onDeconnexion()">
-        Déconnexion
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="inscription" *ngIf="!getIsAuth()">
+      Inscription
+    </a>
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="connexion" *ngIf="!getIsAuth()">
+      Connexion
+    </a>
+    <button class="btn btn-danger nav-link navbar-brand" routerLinkActive="active" *ngIf="getIsAuth()"
+      (click)="onDeconnexion()">
+      Déconnexion
     </button>
-    </div>
-  </nav>
+  </div>
+</nav>

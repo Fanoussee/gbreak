@@ -10,19 +10,13 @@
                 <label for="mot_passe">Mot de passe</label>
                 <input type="password" id="mot_passe" class="form-control" formControlName="mot_passe">
             </div>
-            <button type="submit" 
-                    class="btn btn-success" 
-                    [disabled]="connexionForm.invalid || msgErreur != null">
-                    Se connecter
+            <button type="submit" class="btn btn-success" [disabled]="connexionForm.invalid || msgErreur != null">
+                Se connecter
             </button>
-            <button class="btn btn-danger m-2" 
-                    type="button" 
-                    *ngIf="msgErreur != null" 
-                    (click)="onResetForm()">
-                    Effacer
+            <button class="btn btn-danger m-2" type="button" *ngIf="msgErreur != null" (click)="onResetForm()">
+                Effacer
             </button>
         </form>
         <p class="text-danger" *ngIf="msgErreur != null">{{ msgErreur }}</p>
     </div>
 </div>
-

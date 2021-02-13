@@ -17,15 +17,19 @@ import { HeaderComponent } from './header/header.component';
 import { UtilisateursListComponent } from './utilisateurs-list/utilisateurs-list.component';
 import { UtilisateursService } from './services/utilisateurs.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SingleUtilisateurComponent } from './utilisateurs-list/single-utilisateur/single-utilisateur.component';
+import { CommentaireComponent } from './commentaire/commentaire.component';
+import { SingleCommentaireComponent } from './commentaire/single-commentaire/single-commentaire.component';
 
 const appRoutes : Routes = [
   { path: 'articles', canActivate: [AuthGuard], component: ArticleListComponent },
   { path: 'articles/new', canActivate: [AuthGuard], component: NewArticleComponent },
   { path: 'articles/:uuid_article', canActivate: [AuthGuard], component: SingleArticleComponent },
   { path: 'utilisateurs', canActivate: [AuthGuard], component: UtilisateursListComponent},
+  { path: 'profil', canActivate: [AuthGuard], component: SingleUtilisateurComponent },
   { path: 'connexion', component: ConnexionComponent },
   { path: 'inscription', component: InscriptionComponent },
-  { path: '', component: ArticleListComponent },
+  { path: '', component: ConnexionComponent },
   { path: '**', component: ConnexionComponent }
 ];
 
@@ -38,7 +42,10 @@ const appRoutes : Routes = [
     InscriptionComponent,
     NewArticleComponent,
     HeaderComponent,
-    UtilisateursListComponent
+    UtilisateursListComponent,
+    SingleUtilisateurComponent,
+    CommentaireComponent,
+    SingleCommentaireComponent
   ],
   imports: [
     BrowserModule,

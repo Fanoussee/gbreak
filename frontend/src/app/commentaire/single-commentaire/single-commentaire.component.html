@@ -1,0 +1,34 @@
+<div class="d-flex justify-content-center mt-2 mb-2" *ngIf="!modify">
+    <fa-icon [icon]="faAngleRight" class="flex-grow mr-2 mt-3"></fa-icon>
+    <p class="align-text-bottom flex-grow mr-2 mt-3 font-weight-bold">
+        {{ commentaire.prenom }} {{ commentaire.nom }}
+    </p>
+    <p class="flex-grow-1 mr-2 mt-3 align-text-bottom text-left">
+        - {{ commentaire.commentaire }}
+    </p>
+    <button class="btn btn-primary ml-2" type="button" *ngIf="commentaire.uuid_util == infosUtilActif.uuid_util"
+        (click)="onChangeModify()">
+        <fa-icon [icon]="faPenSquare"></fa-icon>
+    </button>
+    <button class="btn btn-danger ml-2 mr-2" type="button"
+        *ngIf="commentaire.uuid_util == infosUtilActif.uuid_util || infosUtilActif.moderateur == 1"
+        (click)="onDeleteCommentaire()">
+        <fa-icon [icon]="faTimesCircle"></fa-icon>
+    </button>
+    <p class="flex-grow font-italic text-secondary mt-3">
+        {{ commentaire.date_commentaire | date: "dd/MM/yyyy - hh:mm a" }}
+    </p>
+</div>
+
+<form [formGroup]="modifyCommentForm" *ngIf="modify">
+    <div class="formGroup d-flex mt-2 mb-2">
+        <fa-icon [icon]="faAngleRight" class="flex-grow mr-2 mt-3"></fa-icon>
+        <p class="align-text-bottom flex-grow mr-2 mt-3 font-weight-bold">
+            {{ commentaire.prenom }} {{ commentaire.nom }}
+        </p>
+        <input class="flex-grow-1 mr-2" type="text" name="commentaire" id="commentaire" formControlName="modifyComment">
+        <button class="btn btn-success flex-grow" type="button" (click)="onModifyCommentaire()">
+            <fa-icon [icon]="faCheckCircle" class="flex-grow"></fa-icon>
+        </button>
+    </div>
+</form>

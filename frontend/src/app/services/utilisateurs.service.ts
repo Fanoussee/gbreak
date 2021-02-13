@@ -14,12 +14,12 @@ export class UtilisateursService {
     return this.http.get<Utilisateur[]>(this.urlUtilisateurs);
   }
 
-  getOneUtilisateur(){
-    
-  }
-
   createUtilisateur(utilisateur: Utilisateur){
     return this.http.post(this.urlUtilisateurs + "/inscription", utilisateur);
+  }
+
+  deleteUtilisateur(uuid_util: string){
+    return this.http.delete(this.urlUtilisateurs + "/" + uuid_util);
   }
 
 }

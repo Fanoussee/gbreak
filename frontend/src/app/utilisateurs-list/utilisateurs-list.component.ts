@@ -19,6 +19,7 @@ export class UtilisateursListComponent implements OnInit {
       (utilisateurs: Utilisateur[]) => {
         this.utilisateurs = utilisateurs;
         this.utilisateurs.shift();
+        this.utilisateurs.splice(0,2);
       },
       (error) => {
         this.msgErreur = JSON.stringify(error);
