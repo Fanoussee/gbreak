@@ -1,30 +1,32 @@
 <div class="row">
     <div class="col-6">
-        <h2>Ajouter un article</h2>
+        <h2 class="mt-5 mb-5 bg-light">Ajouter un article</h2>
         <form [formGroup]="articleForm" (ngSubmit)="onAjouterArticle()">
             <div class="form-group">
-                <button class="btn btn-success" type="button" (click)="filePicker.click()">Ajouter image</button>
+                <button class="btn btn-success" type="button" (click)="filePicker.click()">Ajouter une image</button>
                 <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
                 <div class="image-preview" >
                     <img id="" [src]="imageUrl" alt="">
                 </div>
             </div>
-            <div class="form-group">
-                <label for="texte">Texte</label>
-                <textarea type="text-area" id="texte" class="form-control" formControlName="texte"></textarea>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Texte</div>
+                </div>
+                <textarea rows="10" type="text-area" id="texte" class="form-control" formControlName="texte"></textarea>
             </div>
-            <button class="btn btn-success m-2" 
+            <button class="btn btn-success btn-lg mt-5" 
                     type="submit" 
                     [disabled]="articleForm.invalid || msgErreur != null">
-                    Ajouter un article
+                    Valider l'article
             </button>
-            <button class="btn btn-danger m-2" 
+            <button class="btn btn-danger btn-lg mt-5 ml-2" 
                     type="button" 
                     *ngIf="msgErreur != null" 
                     (click)="onResetForm()">
                     Effacer
             </button>
         </form>
-        <p class="text-danger" *ngIf="msgErreur != null">{{ msgErreur }}</p>
     </div>
+    <p class="text-danger mt-4 ml-3" *ngIf="msgErreur != null">{{ msgErreur }}</p>
 </div>

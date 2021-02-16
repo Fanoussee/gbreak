@@ -5,6 +5,8 @@ import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { CommentairesService } from '../services/commentaires.service';
 import { Commentaire } from '../models/Commentaire.model';
 import { AuthService } from '../services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-article-list',
@@ -25,7 +27,8 @@ export class ArticleListComponent implements OnInit {
   constructor(
     private articlesService: ArticlesService, 
     private commentairesServices : CommentairesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -40,13 +43,23 @@ export class ArticleListComponent implements OnInit {
               element.nb_commentaires = element.commentaires.length;
             },
             (error) => {
-              this.msgErreur = error;
+              //this.msgErreur = error;
+              if(error instanceof HttpErrorResponse) {
+                if(error.status === 401){
+                  this.router.navigate(['/connexion']);
+                }
+              }
             }
           );
         });
       },
       (error) => {
-        this.msgErreur = error.error.erreur;
+        //this.msgErreur = error.error.erreur;
+        if(error instanceof HttpErrorResponse) {
+          if(error.status === 401){
+            this.router.navigate(['/connexion']);
+          }
+        }
       }
     );
   }

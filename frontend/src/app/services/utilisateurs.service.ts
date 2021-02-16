@@ -15,7 +15,11 @@ export class UtilisateursService {
   }
 
   createUtilisateur(utilisateur: Utilisateur){
-    return this.http.post(this.urlUtilisateurs + "/inscription", utilisateur);
+    return this.http.post<any>(this.urlUtilisateurs + "/inscription", utilisateur);
+  }
+
+  modifyUtilisateur(uuid_util: string, values: any){
+    return this.http.put(this.urlUtilisateurs + "/" + uuid_util, values);
   }
 
   deleteUtilisateur(uuid_util: string){

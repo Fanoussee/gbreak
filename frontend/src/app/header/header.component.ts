@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -9,32 +9,48 @@ import { AuthService } from '../services/auth.service';
 export class HeaderComponent implements OnInit {
 
   isAuth: boolean;
-  prenom: string ;
-  moderateur: number ;
+  prenom: string;
+  moderateur: number;
   private infosUtilActif: any;
 
-  constructor(private authService: AuthService) { }
+  constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
-    this.isAuth = this.authService.getAuth();
+    this.isAuth = false;
     this.prenom = "";
     this.moderateur = 0;
+    /*console.log("initialisation du header");
+    this.isAuth = this.authService.getAuth();
+    if(this.isAuth){
+      this.infosUtilActif = this.authService.getInfosUtilActif();
+      this.moderateur = this.infosUtilActif.moderateur;
+      this.prenom = this.infosUtilActif.prenom;
+    }else{
+      this.prenom = "";
+      this.moderateur = 0;
+    }*/
+    //this.getIsAuth();
+
   }
 
   onDeconnexion() {
-    this.authService.deconnexion();
+    
     this.isAuth = false;
   }
 
   getIsAuth() {
-    if(this.authService.getAuth()){
+    /*this.isAuth = this.authService.getAuth();
+    if(this.isAuth){
       this.infosUtilActif = this.authService.getInfosUtilActif();
-      this.moderateur = this.infosUtilActif.moderateur;
-      this.prenom = this.infosUtilActif.prenom;
-      return true;
-    }else{
-      return false;
+      try {
+        this.moderateur = this.infosUtilActif.moderateur;
+        this.prenom = this.infosUtilActif.prenom;
+      } catch (error) {
+        this.moderateur = 0;
+        this.prenom = "";
+      }
     }
+    return this.isAuth;*/
   }
 
 }

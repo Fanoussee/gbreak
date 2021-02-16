@@ -55,8 +55,8 @@ export class NewArticleComponent implements OnInit {
         }
       );
     } else {
-      this.msgErreur = "Un article doit contenir soit une photo, soit un texte, soit les deux."
-        + " Les informations saisies doivent contenir au moins 2 caractères.";
+      this.msgErreur = "Un article doit contenir soit une photo, soit un texte, soit les deux"
+        + " et le texte doit contenir au moins 2 caractères.";
     }
 
   }

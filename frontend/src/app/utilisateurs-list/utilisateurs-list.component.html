@@ -1,9 +1,19 @@
-<h2>Liste des utilisateurs</h2>
-<ul>
-    <li class="list-group-item" *ngFor="let utilisateur of utilisateurs">
-        <p><strong>Nom / Prénom : </strong>{{ utilisateur.nom }} {{ utilisateur.prenom }}</p>
-        <p><strong>Date de naissance : </strong>{{ utilisateur.date_naiss | date : 'dd/MM/yyyy'}}</p>
-        <p><strong>Email : </strong>{{ utilisateur.email }}</p>
-        <p *ngIf="utilisateur.moderateur==1">(Modérateur)</p>
-    </li>
-</ul>
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="m-4 text-center  bg-light">Liste des utilisateurs</h2>
+        <div class="row justify-content-center mb-2" *ngFor="let utilisateur of utilisateurs; let i = index">
+            <div class="col-6">
+                <div class="row bg-light">
+                    <div class="col-9">
+                        <p><strong>Prénom /Nom : </strong>{{ utilisateur.prenom }} {{ utilisateur.nom }}</p>
+                        <p><strong>Date de naissance : </strong>{{ utilisateur.date_naiss | date : 'dd/MM/yyyy'}}</p>
+                        <p><strong>Email : </strong>{{ utilisateur.email }}</p>
+                    </div>
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                        <button class="btn btn-danger" (click)="onDeleteUtilisateur(i)">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,28 +14,29 @@ exports.connectUser = function(req, res){
         }else if(rows.length === 1){
             bcrypt.compare(mot_passe, rows[0].mot_passe).then(valid => {
                 if(!valid){
-                    return res.status(500).json({ erreur: "Le mot de passe est incorrect !" });
+                    res.status(500).json({ erreur: "Le mot de passe est incorrect !" });
                 }else{
-                    res.status(200).json({ uuid_util: rows[0].uuid_util,
-                                           nom: rows[0].nom,
-                                           prenom: rows[0].prenom,
-                                           date_naiss: rows[0].date_naiss,
-                                           email,
-                                           mot_passe: rows[0].mot_passe,
-                                           moderateur : rows[0].moderateur,
-                                           token: jwt.sign(
-                                               { uuid_util: rows[0].uuid_util },
-                                               'RANDOM_TOKEN_SECRET',
-                                               { expiresIn: '24h' }
-                                           ),
-                                           message: "L'utilisateur existe et le mot de passe est correct !" });
+                    const payload = { subject: rows[0].uuid_util };
+                    const expiresIn = '1h';
+                    const token = jwt.sign(payload, 'RANDOM_TOKEN_SECRET', { expiresIn });
+                    res.status(200).json({ 
+                        uuid_util: rows[0].uuid_util,
+                        /*nom: rows[0].nom,
+                        prenom: rows[0].prenom,
+                        date_naiss: rows[0].date_naiss,
+                        email,
+                        mot_passe: rows[0].mot_passe,
+                        moderateur : rows[0].moderateur,*/
+                        token,
+                        expiresIn
+                    });
                     
                 }
             }).catch(error => {
-                return res.status(500).json({ erreur: "L'authentification a échouée ! " + error });
+                res.status(500).json({ erreur: "L'authentification a échouée ! " + error });
             });
         }else{
-            return res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
+            res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
         }
     });
 };
@@ -69,7 +70,13 @@ exports.createUser = function (req, res) {
                                         mysql: err
                                     });
                                 } else {
-                                    res.status(201).json({ message: "L'utilisateur est créé !" });
+                                    const payload = { subject: uuidUtil };
+                                    const expiresIn = '1h';
+                                    const token = jwt.sign(payload, 'RANDOM_TOKEN_SECRET', { expiresIn });
+                                    res.status(201).json({ 
+                                        token,
+                                        expiresIn
+                                    });
                                 }
                             });
                     })
@@ -87,7 +94,7 @@ exports.createUser = function (req, res) {
 
 //Requête pour obtenir tous les utilisateurs : fonctionne
 exports.getAllUsers = function (req, res) {
-    const sql = 'SELECT * FROM Utilisateur';
+    const sql = 'SELECT * FROM Utilisateur WHERE id_util != 0 AND id_util != 1 ORDER BY nom';
     
     connexion.query(sql, function (err, rows, fields) {
         if (err) {
@@ -121,10 +128,12 @@ exports.getOneUser = function (req, res) {
 //Requête pour modifier un utilisateur : fonctionne
 exports.modifyOneUser = function (req, res) {
     const uuidUtil = req.params.id;
+    console.log(uuidUtil);
     const sql1 = 'SELECT * FROM Utilisateur WHERE uuid_util=?';
     const sql2 = 'UPDATE Utilisateur SET ? WHERE uuid_util=?';
     let idUserToModify = 0;
     const values = req.body;
+    console.log(values);
     connexion.query(sql1, [uuidUtil], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });

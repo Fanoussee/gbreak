@@ -1,22 +1,26 @@
 <div class="row">
     <div class="col-6">
-        <h2>Se connecter</h2>
+        <h2 class="mt-5 mb-5 bg-light">Se connecter</h2>
         <form [formGroup]="connexionForm" (ngSubmit)="onConnexion()">
-            <div class="form-group">
-                <label for="email">Adresse mail</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Adresse mail</div>
+                </div>
                 <input type="email" id="email" class="form-control" formControlName="email">
             </div>
-            <div class="form-group">
-                <label for="mot_passe">Mot de passe</label>
+            <div class="input-group mt-4">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Mot de passe</div>
+                </div>
                 <input type="password" id="mot_passe" class="form-control" formControlName="mot_passe">
             </div>
-            <button type="submit" class="btn btn-success" [disabled]="connexionForm.invalid || msgErreur != null">
+            <button type="submit" class="btn btn-success btn-lg mt-5" [disabled]="connexionForm.invalid || msgErreur != null">
                 Se connecter
             </button>
-            <button class="btn btn-danger m-2" type="button" *ngIf="msgErreur != null" (click)="onResetForm()">
+            <button class="btn btn-danger btn-lg mt-5 ml-2" type="button" *ngIf="msgErreur != null" (click)="onResetForm()">
                 Effacer
             </button>
         </form>
-        <p class="text-danger" *ngIf="msgErreur != null">{{ msgErreur }}</p>
+        <p class="text-danger mt-3" *ngIf="msgErreur != null">{{ msgErreur }}</p>
     </div>
 </div>

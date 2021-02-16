@@ -6,11 +6,11 @@ const router = express.Router();
 const ctrlArticles = require("../controllers/articles");
 const auth = require('../middleware/auth');
 
-router.get("/", ctrlArticles.getAllArticles);
-router.get("/:idArticle", ctrlArticles.getOneArticleWithId);
-router.get("/all/:idUtil", ctrlArticles.getAllArticlesForOneUser);
-router.delete("/:idArticle", ctrlArticles.deleteArticle);
-router.put("/:idArticle", multer, ctrlArticles.modifyArticle);
-router.post("/", multer, ctrlArticles.createArticle);
+router.get("/", auth, ctrlArticles.getAllArticles);
+router.get("/:idArticle", auth, ctrlArticles.getOneArticleWithId);
+router.get("/all/:idUtil", auth, ctrlArticles.getAllArticlesForOneUser);
+router.delete("/:idArticle", auth, ctrlArticles.deleteArticle);
+router.put("/:idArticle", auth, multer, ctrlArticles.modifyArticle);
+router.post("/", auth, multer, ctrlArticles.createArticle);
 
 module.exports = router;

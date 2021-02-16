@@ -50,8 +50,6 @@ export class SingleCommentaireComponent implements OnInit {
 
   onModifyCommentaire() {
     const texte = this.modifyCommentForm.get("modifyComment").value;
-    console.log(texte);
-    console.log(this.commentaire.uuid_commentaire);
     this.commentairesServices.modifyCommentaire(this.commentaire.uuid_commentaire, texte).subscribe(
       () => {
         this.router.navigate(["/articles"]);

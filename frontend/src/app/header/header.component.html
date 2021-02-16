@@ -3,24 +3,24 @@
     Accueil : liste des articles
   </a>
   <div class="nav">
-    <div class="nav-link navbar-brand" *ngIf="getIsAuth()">
-      Bonjour {{ prenom }} <span *ngIf="getIsAuth() && moderateur == 1" id="moderateur">(modérateur)</span>
+    <div class="nav-link navbar-brand" *ngIf="authService.utilisateurConnecte()">
+      Bonjour {{ prenom }} <span *ngIf="authService.utilisateurConnecte() && moderateur == 1" id="moderateur">(modérateur)</span>
     </div>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="profil" *ngIf="getIsAuth()">
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="profil" *ngIf="authService.utilisateurConnecte()">
       Voir mon compte
     </a>
     <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="utilisateurs"
-      *ngIf="getIsAuth() && moderateur == 1">
+      *ngIf="authService.utilisateurConnecte() && moderateur == 1">
       Utilisateurs
     </a>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="inscription" *ngIf="!getIsAuth()">
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="inscription" *ngIf="!authService.utilisateurConnecte()">
       Inscription
     </a>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="connexion" *ngIf="!getIsAuth()">
+    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="connexion" *ngIf="!authService.utilisateurConnecte()">
       Connexion
     </a>
-    <button class="btn btn-danger nav-link navbar-brand" routerLinkActive="active" *ngIf="getIsAuth()"
-      (click)="onDeconnexion()">
+    <button class="btn btn-danger nav-link navbar-brand" routerLinkActive="active" *ngIf="authService.utilisateurConnecte()"
+      (click)="authService.deconnexion()">
       Déconnexion
     </button>
   </div>

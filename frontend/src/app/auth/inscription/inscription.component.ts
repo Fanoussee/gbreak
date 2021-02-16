@@ -46,9 +46,19 @@ export class InscriptionComponent implements OnInit {
     const newUser = new Utilisateur(nom, prenom, date_naiss, moderateur, email, mot_passe);
     if(this.donneesValides(newUser)){
       this.utilisateursService.createUtilisateur(newUser).subscribe(
-        () => {
-          this.authService.setAuth(true);
-          this.router.navigate(['/articles']);
+        (res: any) => {
+          console.log(res);
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('expiresIn', res.expiresIn);
+          //this.authService.connexion(email, mot_passe).subscribe(
+            //() => {
+              this.authService.setAuth(true);
+              this.router.navigate(['/articles']);
+            //},
+            //(error) => {
+              //this.msgErreur = error;
+            //}
+          //);
         },
         (error) => {
           this.authService.setAuth(false);

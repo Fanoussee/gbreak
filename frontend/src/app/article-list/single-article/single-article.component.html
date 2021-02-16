@@ -32,8 +32,8 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-6 border text-center align-text-bottom">
-                    <p class="mt-4" *ngIf="article.photo == null">Votre article n'a pas de photo !</p>
+                <div class="col-6 text-center align-text-bottom">
+                    <p class="font-italic mt-4" *ngIf="article.photo == null">L'article n'a pas de photo !</p>
                     <fa-icon [icon]="faImage" class="fa-5x text-primary" *ngIf="article.photo == null"></fa-icon>
                     <img class="card-img" src="{{ article.photo }}" alt="">
                 </div>
@@ -48,52 +48,52 @@
     </div>
 </div>
 
+<div class="row justify-content-center">
+    <div class="col-8" *ngIf="modify">
+        <h2 class="m-4 bg-light">Modifier l'article</h2>
+        <div class="card">
+            <form [formGroup]="articleForm">
+                <div class="form-group">
+                    <img class="card-img-top" *ngIf="imageUrl == null" src="{{ article.photo }}" alt="">
+                </div>
+                <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
+                    *ngIf="article.photo != null">
+                    Modifier l'image
+                </button>
+                <button class="btn btn-danger btn-block btn-lg" type="button" (click)="onDeletePhoto()"
+                    *ngIf="article.photo != null">
+                    Supprimer l'image
+                </button>
+                <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
+                    *ngIf="article.photo == null">
+                    Ajouter une image
+                </button>
+                <div class="form-group">
+                    <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
+                    <div class="image-preview" *ngIf="imageUrl != null">
+                        <img id="" [src]="imageUrl" alt="">
+                    </div>
+                </div>
+                <textarea rows="10" class="form-control mt-4 mb-4" type="text-area" id="texteModifie" formControlName="texteModifie">
+                </textarea>
+                <button type="submit" class="btn btn-primary btn-block btn-lg" (click)="onModifyArticle()">Modifier
+                    l'article</button>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-12 text-right">
+                <button class="btn btn-danger mt-4 mb-4 btn-lg" routerLink="/articles"
+                    (click)="onChangeModify()">
+                    Annuler la modification
+                </button>
+            </div>
+        </div>
+        <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-12">
         <app-commentaire [uuid_article]="uuid_article"></app-commentaire>
     </div>
-</div>
-
-
-
-<div class="col-6" *ngIf="modify">
-    <h2 class="m-4 bg-light">Modifier l'article</h2>
-    <div class="card">
-        <form [formGroup]="articleForm">
-            <div class="form-group">
-                <img class="card-img-top" *ngIf="imageUrl == null" src="{{ article.photo }}" alt="">
-            </div>
-            <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
-                *ngIf="article.photo != null">
-                Modifier l'image
-            </button>
-            <button class="btn btn-danger btn-block btn-lg" type="button" (click)="onDeletePhoto()"
-                *ngIf="article.photo != null">
-                Supprimer l'image
-            </button>
-            <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
-                *ngIf="article.photo == null">
-                Ajouter une image
-            </button>
-            <div class="form-group">
-                <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
-                <div class="image-preview" *ngIf="imageUrl != null">
-                    <img id="" [src]="imageUrl" alt="">
-                </div>
-            </div>
-            <textarea class="form-control mt-4 mb-4" type="text-area" id="texteModifie" formControlName="texteModifie">
-            </textarea>
-            <button type="submit" class="btn btn-primary btn-block btn-lg" (click)="onModifyArticle()">Modifier
-                l'article</button>
-        </form>
-    </div>
-    <div class="row">
-        <div class="col-12 text-right">
-            <button class="btn btn-danger mt-4 mb-4 btn-lg" routerLink="/articles"
-                (click)="onChangeModify()">
-                Annuler la modification
-            </button>
-        </div>
-    </div>
-    <p class="text-danger" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>
 </div>

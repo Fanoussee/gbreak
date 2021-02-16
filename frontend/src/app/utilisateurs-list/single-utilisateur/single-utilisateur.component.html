@@ -1,13 +1,62 @@
-<h2 class="mt-5 mb-4 bg-light">Mon compte</h2>
-<p>Nom : <span class="font-weight-bold">{{ infosUtilisateurActif.nom }}</span></p>
-<p>Prénom : <span class="font-weight-bold">{{ infosUtilisateurActif.prenom }}</span></p>
-<p>Date de naissance : <span class="font-weight-bold">{{ infosUtilisateurActif.date_naiss | date: "dd/MM/yyyy" }}</span></p>
-<p>Adresse email : <span class="font-weight-bold">{{ infosUtilisateurActif.email }}</span></p>
-<button class="btn btn-success mr-2">Modifier</button>
-<button 
-    class="btn btn-danger" 
-    routerLink="connexion" 
-    (click)="onDeleteUtilisateur()"
-    *ngIf="!moderateur">
-    Supprimer
-</button>
+<h2 class="mt-5 mb-2 bg-light">Mon compte</h2>
+<div class="row">
+    <div class="col-6">
+        <div class="row m-2 border-bottom">
+            <div class="col-12 pb-2 pt-3">
+                <div>Prénom : <span class="font-weight-bold">{{ infosUtilisateurActif.prenom }}</span></div>
+            </div>
+        </div>
+        <div class="row m-2 border-bottom">
+            <div class="col-12 pb-2 pt-3">
+                <div>Nom : <span class="font-weight-bold">{{ infosUtilisateurActif.nom }}</span></div>
+            </div>
+        </div>
+        <div class="row m-2 border-bottom">
+            <div class="col-12 pb-2 pt-3">
+                <div>Date de naissance :
+                    <span class="font-weight-bold">{{ infosUtilisateurActif.date_naiss | date: "dd/MM/yyyy" }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row m-2 border-bottom">
+            <div class="col-9 d-flex align-items-center" *ngIf="!modifyEmail">
+                <div>Adresse email : <span class="font-weight-bold">{{ infosUtilisateurActif.email }}</span></div>
+            </div>
+            <div class="col-3 pb-2 d-flex justify-content-end align-items-center" *ngIf="!modifyEmail">
+                <button class="btn btn-success" (click)="onChangeModifyEmail()">Modifier</button>
+            </div>
+
+            <div class="col-12 mb-2" *ngIf="modifyEmail">
+                <form [formGroup]="emailForm">
+                    <div class="d-flex">
+                        <div class="d-flex">
+                            <div class="align-self-center mr-2">Adresse email : </div>
+                        </div>
+                        <input class="flex-fill mr-2" type="text" name="email" id="email" formControlName="email">
+                        <button class="btn btn-primary mr-2" type="button" (click)="onModifyEmail()">
+                            <fa-icon [icon]="faPenSquare"></fa-icon>
+                        </button>
+                        <button class="btn btn-danger" type="button" (click)="onChangeModifyEmail()">
+                            <fa-icon [icon]="faTimesCircle"></fa-icon>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="row m-2 border-bottom">
+            <div class="col-9 d-flex align-items-center">
+                <div>Mot de passe : <span class="font-weight-bold">**********</span></div>
+            </div>
+            <div class="col-3 pb-2 d-flex justify-content-end align-items-center">
+                <button class="btn btn-success" (click)="onChangeModifyEmail()">Modifier</button>
+            </div>
+        </div>
+
+        <button class="btn btn-danger btn-lg mt-5" routerLink="connexion" (click)="onDeleteUtilisateur()"
+            *ngIf="!moderateur">
+            Supprimer mon compte
+        </button>
+        <p class="text-danger mt-5" *ngIf="msgErreur != null">Erreur : {{ msgErreur }}</p>
+    </div>
+</div>

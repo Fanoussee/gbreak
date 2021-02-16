@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { ArticleListComponent } from './article-list/article-list.component';
@@ -20,6 +20,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SingleUtilisateurComponent } from './utilisateurs-list/single-utilisateur/single-utilisateur.component';
 import { CommentaireComponent } from './commentaire/commentaire.component';
 import { SingleCommentaireComponent } from './commentaire/single-commentaire/single-commentaire.component';
+import { TokenInterceptorService } from './services/token-interceptor.service';
 
 const appRoutes : Routes = [
   { path: 'articles', canActivate: [AuthGuard], component: ArticleListComponent },
@@ -59,8 +60,11 @@ const appRoutes : Routes = [
     ArticlesService,
     UtilisateursService,
     AuthService,
-    AuthGuard
-  ],
+    AuthGuard,
+    { provide: HTTP_INTERCEPTORS, 
+      useClass: TokenInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -35,13 +35,16 @@ export class ConnexionComponent implements OnInit {
     const mot_passe = this.connexionForm.get('mot_passe').value;
     if (this.donneesValides(email, mot_passe)) {
       this.authService.connexion(email, mot_passe).subscribe(
-        () => {
+        (res: any) => {
+          console.log(res);
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('expiresIn', res.expiresIn);
           this.authService.setAuth(true);
           this.router.navigate(['/articles']);
         },
         (error) => {
           this.authService.setAuth(false);
-          this.msgErreur = error.error.erreur;
+          this.msgErreur = this.authService.getMsgErreur();
         }
       );
     } else {
