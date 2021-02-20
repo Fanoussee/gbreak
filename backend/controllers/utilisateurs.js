@@ -17,16 +17,15 @@ exports.connectUser = function(req, res){
                     res.status(500).json({ erreur: "Le mot de passe est incorrect !" });
                 }else{
                     const payload = { subject: rows[0].uuid_util };
-                    const expiresIn = '1h';
+                    const expiresIn = '24h';
                     const token = jwt.sign(payload, 'RANDOM_TOKEN_SECRET', { expiresIn });
                     res.status(200).json({ 
                         uuid_util: rows[0].uuid_util,
-                        /*nom: rows[0].nom,
+                        nom: rows[0].nom,
                         prenom: rows[0].prenom,
                         date_naiss: rows[0].date_naiss,
                         email,
-                        mot_passe: rows[0].mot_passe,
-                        moderateur : rows[0].moderateur,*/
+                        moderateur : rows[0].moderateur,
                         token,
                         expiresIn
                     });
@@ -71,9 +70,12 @@ exports.createUser = function (req, res) {
                                     });
                                 } else {
                                     const payload = { subject: uuidUtil };
-                                    const expiresIn = '1h';
+                                    const expiresIn = '24h';
                                     const token = jwt.sign(payload, 'RANDOM_TOKEN_SECRET', { expiresIn });
-                                    res.status(201).json({ 
+                                    res.status(201).json({  
+                                        uuid_util: uuidUtil,
+                                        prenom: values.prenom,
+                                        moderateur : values.moderateur,
                                         token,
                                         expiresIn
                                     });
@@ -106,7 +108,7 @@ exports.getAllUsers = function (req, res) {
 
 //Requête pour obtenir un utilisateur : fonctionne
 exports.getOneUser = function (req, res) {
-    const sql = 'SELECT * FROM Utilisateur WHERE uuid_util=?';
+    const sql = 'SELECT uuid_util, nom, prenom, date_naiss, moderateur, email, mot_passe FROM Utilisateur WHERE uuid_util=?';
     const uuidUtil = req.params.id;
     let result = 0;
     connexion.query(sql, [uuidUtil], function (err, rows, fields) {

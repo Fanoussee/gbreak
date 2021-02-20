@@ -29,15 +29,15 @@ export class ArticlesService {
     return this.http.delete(this.urlArticles + "/" + uuid_article);
   }
 
-  modifyArticleWithFile(article: Article, image: File){
+  modifyArticle(article: Article, image: File){
     const formData = new FormData();
     formData.append('article', JSON.stringify(article));
     formData.append('image', image);
     return this.http.put(this.urlArticles + "/" + article.uuid_article, formData);
   }
 
-  modifyArticleWithoutFile(article: Article){
+  /*modifyArticleWithoutFile(article: Article){
     return this.http.put(this.urlArticles + "/" + article.uuid_article, article);
-  }
+  }*/
 
 }

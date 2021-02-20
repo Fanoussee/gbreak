@@ -36,9 +36,12 @@ export class ConnexionComponent implements OnInit {
     if (this.donneesValides(email, mot_passe)) {
       this.authService.connexion(email, mot_passe).subscribe(
         (res: any) => {
-          console.log(res);
+          localStorage.setItem('uuid_util', res.uuid_util);
+          localStorage.setItem('prenom', res.prenom);
+          localStorage.setItem('moderateur', res.moderateur);
           localStorage.setItem('token', res.token);
           localStorage.setItem('expiresIn', res.expiresIn);
+          
           this.authService.setAuth(true);
           this.router.navigate(['/articles']);
         },

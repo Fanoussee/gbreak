@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Article } from 'src/app/models/Article.model';
+import { Utilisateur } from 'src/app/models/Utilisateur.model';
 import { ArticlesService } from 'src/app/services/articles.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { UtilisateursService } from 'src/app/services/utilisateurs.service';
 
 @Component({
   selector: 'app-new-article',
@@ -17,17 +19,26 @@ export class NewArticleComponent implements OnInit {
   msgErreur: string = null;
   image: File = null;
   imageUrl: string = null;
-  infosUtilActif: any;
+  infosUtilActif: Utilisateur;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private articlesService: ArticlesService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private utilisateursServices: UtilisateursService) { }
 
   ngOnInit() {
     this.initForm();
-    this.infosUtilActif = this.authService.getInfosUtilActif();
+    const uuid_util = localStorage.getItem('uuid_util');
+    this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
+      (utilisateur: Utilisateur) => {
+        this.infosUtilActif = utilisateur[0];
+      },
+      (error) => {
+        this.msgErreur = error;
+      }
+    );
   }
 
   initForm() {

@@ -4,6 +4,7 @@ import { faAngleRight, faCheckCircle, faPenSquare, faTimesCircle } from '@fortaw
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommentairesService } from 'src/app/services/commentaires.service';
 import { Router } from '@angular/router';
+import { Utilisateur } from 'src/app/models/Utilisateur.model';
 
 
 @Component({

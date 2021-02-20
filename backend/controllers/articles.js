@@ -24,7 +24,7 @@ exports.getOneArticleWithId = function (req, res) {
         + "WHERE article.uuid_util=utilisateur.uuid_util AND uuid_article=?"
         ;
     const uuidArticle = req.params.idArticle;
-    let result ;
+    let result;
     connexion.query(sql, [uuidArticle], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -84,7 +84,7 @@ exports.deleteArticle = function (req, res) {
     const sql1 = 'SELECT * FROM Article WHERE uuid_article=?';
     const sql2 = 'DELETE FROM Article WHERE uuid_article=?';
     const uuidArticle = req.params.idArticle;
-    let result ;
+    let result;
     connexion.query(sql1, [uuidArticle], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte !" });
@@ -121,51 +121,44 @@ exports.deleteArticle = function (req, res) {
 //Requête pour modifier un article : fonctionne
 exports.modifyArticle = function (req, res) {
     const uuidArticle = req.params.idArticle;
-    let photo = null;
-    let texte = null;
+    const reqBody = JSON.parse(JSON.stringify(req.body));
+    const article = JSON.parse(reqBody.article);
+    const photoArticleModifie = article.photo;
+    const texte = article.texte;
+    let fichierImage = null;
     try {
-        const reqBody = JSON.parse(JSON.stringify(req.body));
-        const article = JSON.parse(reqBody.article);
-        texte = article.texte;
-        photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        fichierImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     } catch (error) {
-        texte = req.body.texte;
-        photo = req.body.photo;
+        fichierImage = null;
     }
-    const values = {
-        "photo": photo,
-        "texte": texte
-    };
     const sql1 = 'SELECT * FROM Article WHERE uuid_article=?';
     const sql2 = 'UPDATE Article SET ? WHERE uuid_article=?';
-    let result ;
+    let result;
     connexion.query(sql1, [uuidArticle], function (err, rows, fields) {
         if (err) {
             res.status(500).json({ erreur: "La requête est incorrecte ! " });
         } else {
             try {
                 result = rows[0].uuid_article;
-                try {
-                    const imageUrl = rows[0].photo.split('http://localhost:3000/images/')[1];
+                const photoArticleOrigine = rows[0].photo;
+                if(fichierImage != null){
+                    values = { texte, photo: fichierImage };
+                }else if(photoArticleModifie == photoArticleOrigine){
+                    values = { texte };
+                }else if(photoArticleModifie ==  null && photoArticleOrigine != null){
+                    values = { texte, photo: null };
+                    const imageUrl = photoArticleOrigine.split('http://localhost:3000/images/')[1];
                     fs.unlink(`images/${imageUrl}`, () => {
-                        connexion.query(sql2, [values, uuidArticle], function (err, rows, fields) {
-                            if (err) {
-                                res.status(500).json({ erreur: "La requête est incorrecte ! " });
-                            } else {
-                                res.status(200).json({ message: "L'article a été modifié !" });
-                            }
-                        });    
+                        console.log("image supprimée");
                     });
-                } catch (error) {
-                    connexion.query(sql2, [values, uuidArticle], function (err, rows, fields) {
-                        if (err) {
-                            res.status(500).json({ erreur: "La requête est incorrecte ! " });
-                        } else {
-                            res.status(200).json({ message: "L'article a été modifié !" });
-                        }
-                    });
-                    
                 }
+                connexion.query(sql2, [values, uuidArticle], function (err, rows, fields) {
+                    if (err) {
+                        res.status(500).json({ erreur: "La requête est incorrecte ! " });
+                    } else {
+                        res.status(200).json({ message: "L'article a été modifié !" });
+                    }  
+                });
             } catch (error) {
                 res.status(500).json({ erreur: "L'article n'existe pas !" });
             }

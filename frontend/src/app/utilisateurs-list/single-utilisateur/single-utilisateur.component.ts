@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { UtilisateursService } from 'src/app/services/utilisateurs.service';
 import { faPenSquare, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { Utilisateur } from 'src/app/models/Utilisateur.model';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class SingleUtilisateurComponent implements OnInit {
   passwordForm: FormGroup;
   emailForm: FormGroup;
 
-  infosUtilisateurActif: any;
+  infosUtilisateurActif = new Utilisateur ("", "", null, 0, "", "");
   moderateur: boolean = false;
   msgErreur;
   modifyEmail: boolean;
@@ -32,15 +33,25 @@ export class SingleUtilisateurComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.infosUtilisateurActif = this.authService.getInfosUtilActif();
-    if (this.infosUtilisateurActif.moderateur === 1) {
-      this.moderateur = true;
-    }
     this.msgErreur = null;
     this.modifyEmail = false;
+    const uuid_util = localStorage.getItem('uuid_util');
+    this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
+      (utilisateur: Utilisateur) => {
+        this.infosUtilisateurActif = utilisateur[0];
+        this.initEmailForm();
+        this.initPasswordForm();
+        if (this.infosUtilisateurActif.moderateur == 1) {
+          this.moderateur = true;
+        }
+      },
+      (error) => {
+        this.msgErreur = error;
+      }
+    );
   }
 
-  initPasswordForm(){
+  initPasswordForm() {
     this.passwordForm = this.formBuilder.group({
       prenom: this.infosUtilisateurActif.prenom,
       nom: this.infosUtilisateurActif.nom,
@@ -50,13 +61,13 @@ export class SingleUtilisateurComponent implements OnInit {
     });
   }
 
-  initEmailForm(){
+  initEmailForm() {
     this.emailForm = this.formBuilder.group({
       email: this.infosUtilisateurActif.email
     });
   }
 
-  onChangeModifyEmail(){
+  onChangeModifyEmail() {
     this.modifyEmail = !this.modifyEmail;
     this.initEmailForm();
   }
@@ -95,7 +106,7 @@ export class SingleUtilisateurComponent implements OnInit {
     if (window.confirm("Etes-vous sûr de vouloir supprimer votre compte ?")) {
       this.utilisateursService.deleteUtilisateur(this.infosUtilisateurActif.uuid_util).subscribe(
         () => {
-          this.authService.setAuth(false);
+          this.authService.deconnexion();
         },
         (error) => {
           this.msgErreur = error;

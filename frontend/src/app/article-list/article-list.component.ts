@@ -7,6 +7,8 @@ import { Commentaire } from '../models/Commentaire.model';
 import { AuthService } from '../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { UtilisateursService } from '../services/utilisateurs.service';
+import { Utilisateur } from '../models/Utilisateur.model';
 
 @Component({
   selector: 'app-article-list',
@@ -20,7 +22,7 @@ export class ArticleListComponent implements OnInit {
   articles: Article[];
   msgErreur: string = null;
   nbCommentaires: number ;
-  infosUtilActif: any;
+  infosUtilActif: Utilisateur;
   rightToModify: boolean;
   rightToDelete: boolean;
 
@@ -43,7 +45,6 @@ export class ArticleListComponent implements OnInit {
               element.nb_commentaires = element.commentaires.length;
             },
             (error) => {
-              //this.msgErreur = error;
               if(error instanceof HttpErrorResponse) {
                 if(error.status === 401){
                   this.router.navigate(['/connexion']);
@@ -54,7 +55,6 @@ export class ArticleListComponent implements OnInit {
         });
       },
       (error) => {
-        //this.msgErreur = error.error.erreur;
         if(error instanceof HttpErrorResponse) {
           if(error.status === 401){
             this.router.navigate(['/connexion']);

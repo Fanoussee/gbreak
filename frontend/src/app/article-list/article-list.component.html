@@ -15,7 +15,7 @@
                                     </span>
                                 </div>
                                 <div class="font-italic col-6 text-right">
-                                    {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
+                                    {{ article.date_heure | date :'dd/MM/yyyy à hh:mm a'}}
                                 </div>
                             </div>
                         </div>
@@ -27,10 +27,10 @@
                             </p>
                         </div>
 
-                        <!-- Affichage du bouton permettant d'accèder à un article et ses commentaires -->
+                        <!-- Affichage du nombre de commentaires par article -->
                     </div>
                     <div class="row text-white justify-content-between bg-primary m-0 border">
-                        <div class="col-6">
+                        <div class="col-6 mt-2">
                             <h5>Commentaires : {{ article.nb_commentaires }}</h5>
                         </div>
                         <div class="col-6 text-right">

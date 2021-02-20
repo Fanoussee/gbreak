@@ -14,6 +14,10 @@ export class UtilisateursService {
     return this.http.get<Utilisateur[]>(this.urlUtilisateurs);
   }
 
+  getUtilisateurById(uuid_util: string){
+    return this.http.get<Utilisateur>(this.urlUtilisateurs + "/" + uuid_util);
+  }
+
   createUtilisateur(utilisateur: Utilisateur){
     return this.http.post<any>(this.urlUtilisateurs + "/inscription", utilisateur);
   }

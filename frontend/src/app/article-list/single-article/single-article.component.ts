@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Article } from 'src/app/models/Article.model';
 import { Commentaire } from 'src/app/models/Commentaire.model';
 import { ArticlesService } from 'src/app/services/articles.service';
-import { AuthService } from 'src/app/services/auth.service';
 import { CommentairesService } from 'src/app/services/commentaires.service';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { Utilisateur } from 'src/app/models/Utilisateur.model';
+import { UtilisateursService } from 'src/app/services/utilisateurs.service';
 
 @Component({
   selector: 'app-single-article',
@@ -27,7 +28,7 @@ export class SingleArticleComponent implements OnInit {
   rightToDelete: boolean = false;
   image: File = null;
   imageUrl: string = null;
-  infosUtilActif: any;
+  infosUtilActif: Utilisateur;
   moderateur: boolean = false;
   commentaires: Commentaire[];
 
@@ -36,19 +37,27 @@ export class SingleArticleComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private commentairesServices: CommentairesService
+    private commentairesServices: CommentairesService,
+    private utilisateursServices: UtilisateursService
   ) { }
 
   ngOnInit() {
+    const uuid_util = localStorage.getItem('uuid_util');
+    this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
+      (utilisateur: Utilisateur) => {
+        this.infosUtilActif = utilisateur[0];
+      },
+      (error) => {
+        this.msgErreur = error;
+      }
+    );
     this.article = new Article("", "", "");
     this.uuid_article = this.route.snapshot.params['uuid_article'];
     this.articleService.getArticleById(this.uuid_article).subscribe(
       (article: Article) => {
         this.article = article[0];
         this.initForm();
-        this.infosUtilActif = this.authService.getInfosUtilActif();
-        if (this.infosUtilActif.uuid_util === this.article.uuid_util) {
+        if (uuid_util === this.article.uuid_util) {
           this.rightToModify = true;
           this.rightToDelete = true;
         }
@@ -100,21 +109,17 @@ export class SingleArticleComponent implements OnInit {
 
   onModifyArticle() {
     const texteModifie = this.articleForm.get('texteModifie').value;
-    let nouvellePhoto;
+    let nouvellePhoto = null;
     if (this.image != null && this.article.photo == null) {
       nouvellePhoto = this.image.name;
-      const nouvelArticle = this.newArticle(
-        this.article.uuid_util,
-        null,
-        texteModifie);
-      this.modifWithFile(nouvelArticle, this.image);
     } else {
-      const nouvelArticle = this.newArticle(
-        this.article.uuid_util,
-        this.article.photo,
-        texteModifie);
-      this.modifWithoutFile(nouvelArticle);
+      this.image = null;
     }
+    const nouvelArticle = this.newArticle(
+      this.article.uuid_util,
+      this.article.photo,
+      texteModifie);
+    this.modifArticle(nouvelArticle, this.image);
   }
 
   onDeletePhoto(){
@@ -127,8 +132,8 @@ export class SingleArticleComponent implements OnInit {
     return nouvelArticle;
   }
 
-  private modifWithFile(article: Article, image: File) {
-    this.articleService.modifyArticleWithFile(article, image).subscribe(
+  private modifArticle(article: Article, image: File) {
+    this.articleService.modifyArticle(article, image).subscribe(
       () => {
         this.router.navigate(['/articles']);
       },
@@ -138,8 +143,8 @@ export class SingleArticleComponent implements OnInit {
     );
   }
 
-  private modifWithoutFile(article: Article) {
-    this.articleService.modifyArticleWithoutFile(article).subscribe(
+  /*private modifWithoutFile(article: Article) {
+    this.articleService.modifyArticle(article).subscribe(
       () => {
         this.router.navigate(['/articles']);
       },
@@ -147,7 +152,7 @@ export class SingleArticleComponent implements OnInit {
         this.msgErreur = error.error.erreur;
       }
     );
-  }
+  }*/
 
   onFileSelected(event, file) {
     this.image = <File>event.target.files[0];

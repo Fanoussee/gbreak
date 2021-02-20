@@ -1,26 +1,58 @@
 <nav class="nav navbar nav-pills justify-content-between bg-light sticky-top">
-  <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="articles">
+  <img src="../assets/images/icon-left-font-monochrome-black.svg" width="170" height="50" alt="Logo de Groupomania">
+  <h1>G-break</h1>
+  <a 
+    routerLinkActive="active" 
+    class="nav-link navbar-brand" 
+    routerLink="articles" 
+    *ngIf="getIsAuth()">
     Accueil : liste des articles
   </a>
   <div class="nav">
-    <div class="nav-link navbar-brand" *ngIf="authService.utilisateurConnecte()">
-      Bonjour {{ prenom }} <span *ngIf="authService.utilisateurConnecte() && moderateur == 1" id="moderateur">(modérateur)</span>
+    <div 
+      class="nav-link navbar-brand" 
+      *ngIf="getIsAuth()">
+      Bonjour {{ prenom }} 
+      <span 
+        class=""
+        *ngIf="getIsAuth() && moderateur == 1" 
+        id="moderateur">
+        (modérateur)
+      </span>
     </div>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="profil" *ngIf="authService.utilisateurConnecte()">
+    <a 
+      routerLinkActive="active" 
+      class="nav-link navbar-brand" 
+      routerLink="profil" 
+      *ngIf="getIsAuth()">
       Voir mon compte
     </a>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="utilisateurs"
-      *ngIf="authService.utilisateurConnecte() && moderateur == 1">
+    <a 
+      routerLinkActive="active" 
+      class="nav-link navbar-brand" 
+      routerLink="utilisateurs"
+      *ngIf="getIsAuth() && moderateur == 1">
       Utilisateurs
     </a>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="inscription" *ngIf="!authService.utilisateurConnecte()">
+    <a 
+      routerLinkActive="active" 
+      class="nav-link navbar-brand" 
+      routerLink="inscription" 
+      *ngIf="!getIsAuth()">
       Inscription
     </a>
-    <a routerLinkActive="active" class="nav-link navbar-brand" routerLink="connexion" *ngIf="!authService.utilisateurConnecte()">
+    <a 
+      routerLinkActive="active" 
+      class="nav-link navbar-brand" 
+      routerLink="connexion" 
+      *ngIf="!getIsAuth()">
       Connexion
     </a>
-    <button class="btn btn-danger nav-link navbar-brand" routerLinkActive="active" *ngIf="authService.utilisateurConnecte()"
-      (click)="authService.deconnexion()">
+    <button 
+      class="btn btn-danger nav-link navbar-brand" 
+      routerLinkActive="active" 
+      *ngIf="getIsAuth()"
+      (click)="onDeconnexion()">
       Déconnexion
     </button>
   </div>
