@@ -1,7 +1,11 @@
-//Import de MySQL
+/**
+ * Import de MySQL
+ */
 const mysql = require('mysql');
 
-//Créatin d'une connexion avec la base de données MySQL
+/**
+ * Création d'une connexion avec la base de données MySQL
+ */
 const connexion = mysql.createConnection({
     host: 'localhost',
     user: 'employe',
@@ -9,5 +13,7 @@ const connexion = mysql.createConnection({
     database: 'gbreak'
 });
 
-//Export de la connexion
+/**
+ * Export de la connexion
+ */
 module.exports = connexion;

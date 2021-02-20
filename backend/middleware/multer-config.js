@@ -1,11 +1,21 @@
+/**
+ * Import du package multer pour gérer les fichiers images.
+ */
 const multer =require('multer');
 
+/**
+ * Dictionnaire des différents types d'images.
+ */
 const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/jpeg': 'jpg',
     'image/png': 'png'
 };
 
+/**
+ * Constante permettant l'enregistrement des fichiers images
+ * dans le répertoire "backend/images"
+ */
 const strorage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, 'images');
@@ -18,4 +28,7 @@ const strorage = multer.diskStorage({
     }
 });
 
+/**
+ * Export de la configuration du multer.
+ */
 module.exports = multer({ storage: strorage }).single('image');

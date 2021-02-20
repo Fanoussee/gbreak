@@ -1,5 +1,17 @@
+/**
+ * Import du package jsonwebtoken pour la gestion d'un token d'identification
+ */
 const jwt = require('jsonwebtoken');
 
+/**
+ * Cette fonction permet de vérifier le token envoyé dans la requête
+ * pour savoir si l'utilisateur a le droit d'accéder aux routes protégées.
+ * @param {*} req La requête reçue
+ * @requires token : dans l'en tête de la requête
+ * @requires uuid_util
+ * @param {*} res La réponse envoyée
+ * @param {*} next Permet d'aller à l'étape suivante
+ */
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -11,6 +23,6 @@ module.exports = (req, res, next) => {
             next();
         }
     } catch (error) {
-        res.status(401).json({ error: error | 'Requête non authentifiée !' });
+        res.status(401).json({ erreur: error | 'Requête non authentifiée !' });
     }
 }
