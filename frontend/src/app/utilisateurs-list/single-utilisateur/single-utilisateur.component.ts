@@ -36,19 +36,25 @@ export class SingleUtilisateurComponent implements OnInit {
     this.msgErreur = null;
     this.modifyEmail = false;
     const uuid_util = localStorage.getItem('uuid_util');
-    this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
-      (utilisateur: Utilisateur) => {
-        this.infosUtilisateurActif = utilisateur[0];
-        this.initEmailForm();
-        this.initPasswordForm();
-        if (this.infosUtilisateurActif.moderateur == 1) {
-          this.moderateur = true;
+    if(uuid_util){
+      this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
+        (utilisateur: Utilisateur) => {
+          this.infosUtilisateurActif = utilisateur[0];
+          this.initEmailForm();
+          this.initPasswordForm();
+          if (this.infosUtilisateurActif.moderateur == 1) {
+            this.moderateur = true;
+          }
+        },
+        (error) => {
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
         }
-      },
-      (error) => {
-        this.msgErreur = error;
-      }
-    );
+      );
+    }else{
+      window.alert("Vous n'avez pas le droit d'accéder à cette application.");
+      this.authService.deconnexion();
+    }
   }
 
   initPasswordForm() {
@@ -75,15 +81,20 @@ export class SingleUtilisateurComponent implements OnInit {
   onModifyEmail() {
     const uuid_util = this.infosUtilisateurActif.uuid_util;
     const values = { email: this.emailForm.get("email").value };
-    this.utilisateursService.modifyUtilisateur(uuid_util, values).subscribe(
-      () => {
-        this.authService.setEmailUtilActif(values.email);
-        this.router.navigate(["/articles"]);
-      },
-      (error) => {
-        this.msgErreur = "La modification n'a pas fonctionnée !";
-      }
-    );
+    if (window.confirm(
+      "Si vous modifiez votre email, vous devrez vous reconnecter. " +
+      "Voulez-vous continuer ?")
+      )
+    {
+      this.utilisateursService.modifyUtilisateur(uuid_util, values).subscribe(
+        () => {
+          this.authService.deconnexion();
+        },
+        (error) => {
+          this.msgErreur = "La modification n'a pas fonctionnée !";
+        }
+      );
+    }
   }
 
   onModifyUtilisateur() {
@@ -91,29 +102,45 @@ export class SingleUtilisateurComponent implements OnInit {
     const values = {
       mot_passe: this.passwordForm.get("mdp").value
     }
-    this.utilisateursService.modifyUtilisateur(uuid_util, values).subscribe(
-      () => {
-        this.router.navigate(["/articles"]);
-      },
-      (error) => {
-        this.msgErreur = error.error.erreur;
-        ;
-      }
-    );
+    if (window.confirm(
+      "Si vous modifiez votre email, vous devrez vous reconnecter. " + 
+      "Êtes-vous sûr de vouloir modifier votre email ?")
+      )
+    {
+      this.utilisateursService.modifyUtilisateur(uuid_util, values).subscribe(
+        () => {
+          this.router.navigate(["/articles"]);
+        },
+        (error) => {
+          this.msgErreur = error.error.erreur;
+          ;
+        }
+      );
+    }
   }
 
   onDeleteUtilisateur() {
-    if (window.confirm("Etes-vous sûr de vouloir supprimer votre compte ?")) {
-      this.utilisateursService.deleteUtilisateur(this.infosUtilisateurActif.uuid_util).subscribe(
+    const uuid_util = localStorage.getItem('uuid_util');
+    if(uuid_util){
+      this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
         () => {
-          this.authService.deconnexion();
-        },
-        (error) => {
-          this.msgErreur = error;
+          if (window.confirm("Etes-vous sûr de vouloir supprimer votre compte ?")) {
+            this.utilisateursService.deleteUtilisateur(this.infosUtilisateurActif.uuid_util).subscribe(
+              () => {
+                this.authService.deconnexion();
+              },
+              (error) => {
+                this.msgErreur = error.error.erreur;
+              }
+            );
+          } else {
+            this.router.navigate(["/articles"]);
+          }
         }
       );
-    } else {
-      this.router.navigate(["/articles"]);
+    }else{
+      window.alert("Vous n'avez pas le droit d'accéder à cette application.");
+      this.authService.deconnexion();
     }
   }
 

@@ -10,14 +10,6 @@ export class ArticlesService {
   
   constructor(private http: HttpClient) { }
 
-  getArticles(){
-    return this.http.get<Article[]>(this.urlArticles);
-  }
-
-  getArticleById(id){
-    return this.http.get<Article>(this.urlArticles + "/" + id);
-  }
-
   createArticle(article : Article, image: File){
     const formData = new FormData();
     formData.append('article', JSON.stringify(article));
@@ -25,8 +17,12 @@ export class ArticlesService {
     return this.http.post(this.urlArticles, formData);
   }
 
-  deleteArticle(uuid_article){
-    return this.http.delete(this.urlArticles + "/" + uuid_article);
+  getArticles(){
+    return this.http.get<Article[]>(this.urlArticles);
+  }
+
+  getArticleById(id){
+    return this.http.get<Article>(this.urlArticles + "/" + id);
   }
 
   modifyArticle(article: Article, image: File){
@@ -36,8 +32,8 @@ export class ArticlesService {
     return this.http.put(this.urlArticles + "/" + article.uuid_article, formData);
   }
 
-  /*modifyArticleWithoutFile(article: Article){
-    return this.http.put(this.urlArticles + "/" + article.uuid_article, article);
-  }*/
+  deleteArticle(uuid_article){
+    return this.http.delete(this.urlArticles + "/" + uuid_article);
+  }
 
 }

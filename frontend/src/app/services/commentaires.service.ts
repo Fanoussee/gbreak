@@ -11,16 +11,16 @@ export class CommentairesService {
 
   constructor(private http: HttpClient) { }
 
+  ajouterCommentaire(commentaire : Commentaire){
+    return this.http.post(this.urlCommentaires + "/" + commentaire.uuid_article, commentaire);
+  }
+
   getCommentaires(){
     return this.http.get<Commentaire[]>(this.urlCommentaires);
   }
 
   getCommentairesByUuidArticle(uuid_article: string){
     return this.http.get<Commentaire[]>(this.urlCommentaires + "/" + uuid_article);
-  }
-
-  ajouterCommentaire(commentaire : Commentaire){
-    return this.http.post(this.urlCommentaires + "/" + commentaire.uuid_article, commentaire);
   }
 
   modifyCommentaire(uuid_commentaire: string, texteCommentaire: string){
@@ -31,4 +31,5 @@ export class CommentairesService {
   deleteCommentaire(uuid_commentaire: string){
     return this.http.delete(this.urlCommentaires + "/" + uuid_commentaire);
   }
+
 }

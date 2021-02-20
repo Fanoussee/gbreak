@@ -4,8 +4,8 @@ import { faAngleRight, faCheckCircle, faPenSquare, faTimesCircle } from '@fortaw
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommentairesService } from 'src/app/services/commentaires.service';
 import { Router } from '@angular/router';
-import { Utilisateur } from 'src/app/models/Utilisateur.model';
-
+import { AuthService } from 'src/app/services/auth.service';
+import { UtilisateursService } from 'src/app/services/utilisateurs.service';
 
 @Component({
   selector: 'app-single-commentaire',
@@ -31,7 +31,9 @@ export class SingleCommentaireComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private commentairesServices: CommentairesService,
-    private router: Router) { }
+    private router: Router,
+    private authService: AuthService,
+    private utilisateursService: UtilisateursService) { }
 
   ngOnInit(): void {
     this.modify = false;
@@ -50,27 +52,55 @@ export class SingleCommentaireComponent implements OnInit {
   }
 
   onModifyCommentaire() {
-    const texte = this.modifyCommentForm.get("modifyComment").value;
-    this.commentairesServices.modifyCommentaire(this.commentaire.uuid_commentaire, texte).subscribe(
-      () => {
-        this.router.navigate(["/articles"]);
-      },
-      (error) => {
-        this.msgErreur = error;
-      }
-    );
+    const uuid_util = localStorage.getItem('uuid_util');
+    if (uuid_util) {
+      this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
+        () => {
+          const texte = this.modifyCommentForm.get("modifyComment").value;
+          this.commentairesServices.modifyCommentaire(this.commentaire.uuid_commentaire, texte).subscribe(
+            () => {
+              this.router.navigate(["/articles"]);
+            },
+            (error) => {
+              this.msgErreur = error;
+            }
+          );
+        },
+        (error) => {
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
+        }
+      );
+    } else {
+      window.alert("Vous n'avez pas le droit d'accéder à cette application.");
+      this.authService.deconnexion();
+    }
   }
 
   onDeleteCommentaire() {
-    if (window.confirm("Etes-vous sûr de vouloir supprimer ce commentaire ?")) {
-      this.commentairesServices.deleteCommentaire(this.commentaire.uuid_commentaire).subscribe(
+    const uuid_util = localStorage.getItem('uuid_util');
+    if (uuid_util) {
+      this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
         () => {
-          this.router.navigate(["/articles"]);
+          if (window.confirm("Etes-vous sûr de vouloir supprimer ce commentaire ?")) {
+            this.commentairesServices.deleteCommentaire(this.commentaire.uuid_commentaire).subscribe(
+              () => {
+                this.router.navigate(["/articles"]);
+              },
+              (error) => {
+                this.msgErreur = error;
+              }
+            );
+          }
         },
         (error) => {
-          this.msgErreur = error;
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
         }
       );
+    } else {
+      window.alert("Vous n'avez pas le droit d'accéder à cette application.");
+      this.authService.deconnexion();
     }
   }
 

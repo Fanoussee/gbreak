@@ -41,12 +41,9 @@ export class ConnexionComponent implements OnInit {
           localStorage.setItem('moderateur', res.moderateur);
           localStorage.setItem('token', res.token);
           localStorage.setItem('expiresIn', res.expiresIn);
-          
-          this.authService.setAuth(true);
           this.router.navigate(['/articles']);
         },
         (error) => {
-          this.authService.setAuth(false);
           this.msgErreur = this.authService.getMsgErreur();
         }
       );

@@ -7,7 +7,6 @@ import { Commentaire } from '../models/Commentaire.model';
 import { AuthService } from '../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { UtilisateursService } from '../services/utilisateurs.service';
 import { Utilisateur } from '../models/Utilisateur.model';
 
 @Component({

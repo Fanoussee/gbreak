@@ -6,7 +6,6 @@ import { Article } from 'src/app/models/Article.model';
 import { Utilisateur } from 'src/app/models/Utilisateur.model';
 import { ArticlesService } from 'src/app/services/articles.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { UtilisateursService } from 'src/app/services/utilisateurs.service';
 
 @Component({
   selector: 'app-new-article',
@@ -19,26 +18,17 @@ export class NewArticleComponent implements OnInit {
   msgErreur: string = null;
   image: File = null;
   imageUrl: string = null;
+  uuid_util: string = null;
   infosUtilActif: Utilisateur;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private articlesService: ArticlesService,
-    private authService: AuthService,
-    private utilisateursServices: UtilisateursService) { }
+    private authService: AuthService) { }
 
   ngOnInit() {
     this.initForm();
-    const uuid_util = localStorage.getItem('uuid_util');
-    this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
-      (utilisateur: Utilisateur) => {
-        this.infosUtilActif = utilisateur[0];
-      },
-      (error) => {
-        this.msgErreur = error;
-      }
-    );
   }
 
   initForm() {
@@ -54,15 +44,16 @@ export class NewArticleComponent implements OnInit {
       photo = this.image.name;
     }
     const texte = this.articleForm.get('texte').value;
-    const uuid_util = this.infosUtilActif.uuid_util;
-    const newArticle = new Article(uuid_util, photo, texte);
+    this.uuid_util = localStorage.getItem('uuid_util');
+    const newArticle = new Article(this.uuid_util, photo, texte);
     if (this.donneesValides(newArticle)) {
       this.articlesService.createArticle(newArticle, this.image).subscribe(
         () => {
           this.router.navigate(['/articles']);
         },
         (error) => {
-          this.msgErreur = error.error.erreur;
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
         }
       );
     } else {

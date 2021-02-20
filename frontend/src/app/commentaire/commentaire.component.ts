@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Commentaire } from '../models/Commentaire.model';
 import { CommentairesService } from '../services/commentaires.service';
 import { faAngleRight, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import { Router } from '@angular/router';
 import { UtilisateursService } from '../services/utilisateurs.service';
 import { Utilisateur } from '../models/Utilisateur.model';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-commentaire',
@@ -28,29 +28,34 @@ export class CommentaireComponent implements OnInit {
     private formBuilder: FormBuilder,
     private commentairesServices: CommentairesService,
     private utilisateursServices: UtilisateursService,
-    private router: Router) { }
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     this.initNewCommentForm();
     const uuid_util = localStorage.getItem('uuid_util');
-    this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
-      (utilisateur: Utilisateur) => {
-        this.infosUtilActif = utilisateur[0];
-        this.commentairesServices.getCommentairesByUuidArticle(this.uuid_article).subscribe(
-          (commentaires: Commentaire[]) => {
-            this.commentaires = commentaires;
-          },
-          (error) => {
-            this.msgErreur = error;
-          });
-      },
-      (error) => {
-        this.msgErreur = error;
-      }
-    );
-      
-    
-
+    if(uuid_util){
+      //Récupération du nom et du prénom de l'utilisateur connecté
+      this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
+        (utilisateur: Utilisateur) => {
+          this.infosUtilActif = utilisateur[0];
+          //Récupération des commentaires de l'article sélectionné
+          this.commentairesServices.getCommentairesByUuidArticle(this.uuid_article).subscribe(
+            (commentaires: Commentaire[]) => {
+              this.commentaires = commentaires;
+            },
+            (error) => {
+              this.msgErreur = error.error.erreur;
+            });
+        },
+        (error) => {
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
+        }
+      );
+    }else{
+      window.alert("Vous n'avez pas le droit d'accéder à cette application.");
+      this.authService.deconnexion();
+    }
   }
 
   initNewCommentForm() {
@@ -60,16 +65,30 @@ export class CommentaireComponent implements OnInit {
   }
 
   onAjouterCommentaire() {
-    let newCommentaire: Commentaire = new Commentaire(
-      this.infosUtilActif.uuid_util,
-      this.newCommentForm.get("newComment").value
-    );
-    newCommentaire.uuid_article = this.uuid_article;
-    this.commentairesServices.ajouterCommentaire(newCommentaire).subscribe(
-      () => {
-        this.router.navigate(["/articles"]);
-      }
-    );
+    const uuid_util = localStorage.getItem('uuid_util');
+    if(uuid_util){
+      this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
+        () => {
+          let newCommentaire: Commentaire = new Commentaire(
+            uuid_util,
+            this.newCommentForm.get("newComment").value
+          );
+          newCommentaire.uuid_article = this.uuid_article;
+          this.commentairesServices.ajouterCommentaire(newCommentaire).subscribe(
+            () => {
+              this.ngOnInit();
+            }
+          );
+        },
+        (error) => {
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
+        }
+      );
+    }else{
+      window.alert("Vous n'avez pas le droit d'accéder à cette application.");
+      this.authService.deconnexion();
+    }
   }
 
 }

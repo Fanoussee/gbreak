@@ -52,18 +52,9 @@ export class InscriptionComponent implements OnInit {
           localStorage.setItem('moderateur', res.moderateur);
           localStorage.setItem('token', res.token);
           localStorage.setItem('expiresIn', res.expiresIn);
-          //this.authService.connexion(email, mot_passe).subscribe(
-            //() => {
-              this.authService.setAuth(true);
-              this.router.navigate(['/articles']);
-            //},
-            //(error) => {
-              //this.msgErreur = error;
-            //}
-          //);
+          this.router.navigate(['/articles']);
         },
         (error) => {
-          this.authService.setAuth(false);
           this.msgErreur = error.error.erreur;
         }
       );

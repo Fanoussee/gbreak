@@ -15,7 +15,7 @@
       Bonjour {{ prenom }} 
       <span 
         class=""
-        *ngIf="getIsAuth() && moderateur == 1" 
+        *ngIf="getIsAuth() && moderateur === 1" 
         id="moderateur">
         (modérateur)
       </span>
@@ -31,7 +31,7 @@
       routerLinkActive="active" 
       class="nav-link navbar-brand" 
       routerLink="utilisateurs"
-      *ngIf="getIsAuth() && moderateur == 1">
+      *ngIf="getIsAuth() && moderateur === 1">
       Utilisateurs
     </a>
     <a 

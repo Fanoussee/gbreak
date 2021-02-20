@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 @Injectable()
 
 export class AuthService {
-    private isAuth = false;
     private msgErreur = "";
     urlUtilisateurs = 'http://localhost:3000/api/utilisateurs/connexion';
     private infosUtilisateurActif : any;
@@ -21,7 +20,6 @@ export class AuthService {
     connexion(email, mot_passe) : Observable<any>{
         this.http.post(this.urlUtilisateurs, { email, mot_passe }).subscribe(
             (infos: any) => {
-                this.isAuth = true;
                 this.infosUtilisateurActif = infos;
             },
             (err) => {
@@ -29,14 +27,7 @@ export class AuthService {
             }
         );
         return this.http.post<any>(this.urlUtilisateurs, {email, mot_passe});
-        //.do(res => this.setSession)
-        //.shareReplay(); 
     }
-
-    /*private setSession(authResult) {
-        const expiresAt = moment().add(authResult.expiresIn, 'second');
-        localstorage.setItem('id_token', authResult.idToken);
-        localstorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));*/
 
     deconnexion() {
         localStorage.removeItem('uuid_util');
@@ -44,7 +35,6 @@ export class AuthService {
         localStorage.removeItem('moderateur');
         localStorage.removeItem('token');
         localStorage.removeItem('expiresIn');
-        this.isAuth = false;
         this.router.navigate(['/connexion']);
     }
 
@@ -56,20 +46,8 @@ export class AuthService {
         return localStorage.getItem('token');
     }
 
-    getAuth(){
-        return this.isAuth;
-    }
-
-    setAuth(value: boolean){
-        this.isAuth = value;
-    }
-
     getInfosUtilActif(){
         return this.infosUtilisateurActif;
-    }
-
-    setEmailUtilActif(email:string){
-        this.infosUtilisateurActif.email = email;
     }
 
     getMsgErreur(){

@@ -9,6 +9,7 @@ import { CommentairesService } from 'src/app/services/commentaires.service';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { Utilisateur } from 'src/app/models/Utilisateur.model';
 import { UtilisateursService } from 'src/app/services/utilisateurs.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-single-article',
@@ -19,7 +20,7 @@ export class SingleArticleComponent implements OnInit {
 
   faImage = faImage;
 
-  article: Article;
+  article = new Article("", "", "");
   articleForm: FormGroup;
   uuid_article: string;
   msgErreur = null;
@@ -28,6 +29,7 @@ export class SingleArticleComponent implements OnInit {
   rightToDelete: boolean = false;
   image: File = null;
   imageUrl: string = null;
+  uuid_util: string;
   infosUtilActif: Utilisateur;
   moderateur: boolean = false;
   commentaires: Commentaire[];
@@ -38,47 +40,56 @@ export class SingleArticleComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private commentairesServices: CommentairesService,
-    private utilisateursServices: UtilisateursService
+    private utilisateursServices: UtilisateursService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
     const uuid_util = localStorage.getItem('uuid_util');
-    this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
-      (utilisateur: Utilisateur) => {
-        this.infosUtilActif = utilisateur[0];
-      },
-      (error) => {
-        this.msgErreur = error;
-      }
-    );
-    this.article = new Article("", "", "");
-    this.uuid_article = this.route.snapshot.params['uuid_article'];
-    this.articleService.getArticleById(this.uuid_article).subscribe(
-      (article: Article) => {
-        this.article = article[0];
-        this.initForm();
-        if (uuid_util === this.article.uuid_util) {
-          this.rightToModify = true;
-          this.rightToDelete = true;
+    //Vérifie si l'utilisateur existe
+    if (uuid_util) {
+      this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
+        (utilisateur: Utilisateur) => {
+          this.infosUtilActif = utilisateur[0];
+          this.uuid_article = this.route.snapshot.params['uuid_article'];
+          //Vérifie si l'article existe
+          this.articleService.getArticleById(this.uuid_article).subscribe(
+            (article: Article) => {
+              this.article = article[0];
+              this.initForm();
+              if (uuid_util === this.article.uuid_util) {
+                this.rightToModify = true;
+                this.rightToDelete = true;
+              }
+              if (this.infosUtilActif.moderateur === 1) {
+                this.moderateur = true;
+                this.rightToDelete = true;
+              }
+              this.commentairesServices.getCommentairesByUuidArticle(this.uuid_article).subscribe(
+                (commentaires: Commentaire[]) => {
+                  this.commentaires = commentaires;
+                  this.article.nb_commentaires = this.commentaires.length;
+                },
+                (error) => {
+                  this.msgErreur = error.error.erreur;
+                }
+              );
+            },
+            (error) => {
+              window.alert(error.error.erreur);
+              this.router.navigate(['/articles']);
+            }
+          );
+        },
+        (error) => {
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
         }
-        if(this.infosUtilActif.moderateur === 1){
-          this.moderateur = true;
-          this.rightToDelete = true;
-        }
-        this.commentairesServices.getCommentairesByUuidArticle(this.uuid_article).subscribe(
-          (commentaires: Commentaire[]) => {
-            this.commentaires = commentaires;
-            this.article.nb_commentaires = this.commentaires.length;
-          },
-          (error) => {
-            this.msgErreur = error;
-          }
-        );
-      },
-      (error) => {
-        this.msgErreur = JSON.stringify(error);
-      }
-    );
+      );
+    } else {
+      window.alert("Vous n'avez pas le droit d'accéder à cette application !");
+      this.authService.deconnexion();
+    }
   }
 
   initForm() {
@@ -89,15 +100,31 @@ export class SingleArticleComponent implements OnInit {
   }
 
   onDeleteArticle() {
-    if (window.confirm("Etes-vous sûr de vouloir supprimer cet article ?")) {
-      this.articleService.deleteArticle(this.uuid_article).subscribe(
+    //Vérifie si l'uuid de l'utilisateur existe
+    this.uuid_util = localStorage.getItem('uuid_util');
+    if(this.uuid_util){
+      this.utilisateursServices.getUtilisateurById(this.uuid_util).subscribe(
         () => {
-          this.router.navigate(['/articles']);
+          this.uuid_article = this.route.snapshot.params['uuid_article'];
+          if (window.confirm("Etes-vous sûr de vouloir supprimer cet article ?")) {
+            this.articleService.deleteArticle(this.uuid_article).subscribe(
+              () => {
+                this.router.navigate(['/articles']);
+              },
+              (error) => {
+                this.msgErreur = error.error.erreur;
+              }
+            );
+          }
         },
         (error) => {
-          this.msgErreur = error.error.erreur;
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
         }
       );
+    }else{
+      window.alert("Vous n'avez pas le droit d'accéder à cette application !");
+      this.authService.deconnexion();
     }
   }
 
@@ -115,14 +142,33 @@ export class SingleArticleComponent implements OnInit {
     } else {
       this.image = null;
     }
-    const nouvelArticle = this.newArticle(
-      this.article.uuid_util,
-      this.article.photo,
-      texteModifie);
-    this.modifArticle(nouvelArticle, this.image);
+    this.uuid_util = localStorage.getItem('uuid_util');
+    if(this.uuid_util){
+      this.utilisateursServices.getUtilisateurById(this.uuid_util).subscribe(
+        () => {
+          const nouvelArticle = this.newArticle(
+            this.article.uuid_util,
+            this.article.photo,
+            texteModifie);
+          if(this.donneesValides(nouvelArticle)){
+            this.modifArticle(nouvelArticle, this.image);
+          }else{
+            this.msgErreur = "Un article doit contenir soit une photo, soit un texte, soit les deux"
+            + " et le texte doit contenir au moins 2 caractères.";
+          }
+        },
+        (error) => {
+          window.alert(error.error.erreur);
+          this.authService.deconnexion();
+        }
+      );
+    }else{
+      window.alert("Vous n'avez pas le droit d'accéder à cette application !");
+      this.authService.deconnexion();
+    }
   }
 
-  onDeletePhoto(){
+  onDeletePhoto() {
     this.article.photo = null;
   }
 
@@ -142,17 +188,6 @@ export class SingleArticleComponent implements OnInit {
       }
     );
   }
-
-  /*private modifWithoutFile(article: Article) {
-    this.articleService.modifyArticle(article).subscribe(
-      () => {
-        this.router.navigate(['/articles']);
-      },
-      (error) => {
-        this.msgErreur = error.error.erreur;
-      }
-    );
-  }*/
 
   onFileSelected(event, file) {
     this.image = <File>event.target.files[0];
