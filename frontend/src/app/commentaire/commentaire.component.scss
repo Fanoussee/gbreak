@@ -1,0 +1,16 @@
+#nouveau_commentaire {
+    @media screen and (max-width: 767px) {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        #faAngleRight {
+            display: none;
+        }
+        textarea {
+            height: 200px;
+        }
+        button {
+            margin-top: 20px;
+        }
+    }
+}

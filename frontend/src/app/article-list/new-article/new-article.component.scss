@@ -1,9 +1,35 @@
-input[type="file"] {
-    visibility: hidden;
-  }
-
-.image-preview {
-    img {
-      max-width: 100%;
+#bloc_ajouter_article {
+  @media screen and (max-width: 575px) {
+    & h2 {
+      font-size: 1.8em;
     }
   }
+}
+
+input[type="file"] {
+  visibility: hidden;
+}
+
+.image-preview {
+  img {
+    max-width: 100%;
+  }
+}
+
+.input-group {
+    @media screen and (max-width: 576px) {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.form-control {
+  @media screen and (max-width: 576px) {
+      width: 100%;
+  }
+}
+
+#boutons_ajouter_article {
+  display: flex;
+  flex-direction: row;
+}

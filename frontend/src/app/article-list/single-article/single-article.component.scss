@@ -1,9 +1,23 @@
 input[type="file"] {
-    visibility: hidden;
-  }
+  visibility: hidden;
+}
 
 .image-preview {
-    img {
-      max-width: 100%;
-    }
+  img {
+    max-width: 100%;
   }
+}
+
+#boutons_card {
+  @media screen and(max-width: 991px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+#card_body_image {
+  @media screen and(max-width: 900px) {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}

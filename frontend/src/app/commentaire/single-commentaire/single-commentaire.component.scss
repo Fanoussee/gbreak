@@ -1,0 +1,27 @@
+.commentaire {
+    @media screen and (max-width: 767px) {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        .faAngleRight {
+            display: none;
+        }
+        button {
+            margin-top: 10px;
+        }
+        #tiret_avant_commentaire {
+            display: none;
+        }
+        #texte_commentaire {
+            word-wrap: break-word;
+            text-align: justify;
+        }
+        textarea {
+            height: 150px;
+        }
+    }
+}
+
+textarea {
+    height: 100px;
+}

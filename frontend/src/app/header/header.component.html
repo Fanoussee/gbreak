@@ -1,6 +1,8 @@
 <nav class="nav navbar nav-pills justify-content-between bg-light sticky-top">
-  <img src="../assets/images/icon-left-font-monochrome-black.svg" width="170" height="50" alt="Logo de Groupomania">
-  <h1>G-break</h1>
+  <div id="logo_titre" class="d-flex">
+    <img class="mr-5" src="../assets/images/icon-left-font-monochrome-black.svg" alt="Logo de Groupomania">
+    <h1>G-break</h1>
+  </div>
   <a 
     routerLinkActive="active" 
     class="nav-link navbar-brand" 
@@ -10,11 +12,12 @@
   </a>
   <div class="nav">
     <div 
+      id="prenom_moderateur"
       class="nav-link navbar-brand" 
       *ngIf="getIsAuth()">
       Bonjour {{ prenom }} 
       <span 
-        class=""
+        class="text-danger font-weight-bold font-italic"
         *ngIf="getIsAuth() && moderateur === 1" 
         id="moderateur">
         (modérateur)
@@ -34,20 +37,22 @@
       *ngIf="getIsAuth() && moderateur === 1">
       Utilisateurs
     </a>
-    <a 
-      routerLinkActive="active" 
-      class="nav-link navbar-brand" 
-      routerLink="inscription" 
-      *ngIf="!getIsAuth()">
-      Inscription
-    </a>
-    <a 
-      routerLinkActive="active" 
-      class="nav-link navbar-brand" 
-      routerLink="connexion" 
-      *ngIf="!getIsAuth()">
-      Connexion
-    </a>
+    <div id="inscription_connexion">
+      <a 
+        routerLinkActive="active" 
+        class="nav-link navbar-brand" 
+        routerLink="inscription" 
+        *ngIf="!getIsAuth()">
+        Inscription
+      </a>
+      <a 
+        routerLinkActive="active" 
+        class="nav-link navbar-brand" 
+        routerLink="connexion" 
+        *ngIf="!getIsAuth()">
+        Connexion
+      </a>
+    </div>
     <button 
       class="btn btn-danger nav-link navbar-brand" 
       routerLinkActive="active" 

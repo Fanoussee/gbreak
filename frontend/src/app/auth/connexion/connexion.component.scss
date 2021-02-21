@@ -1,0 +1,12 @@
+.input-group {
+    @media screen and (max-width: 400px) {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.form-control {
+    @media screen and (max-width: 400px) {
+        width: 100%;
+    }
+}

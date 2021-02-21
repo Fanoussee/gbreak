@@ -1,32 +1,36 @@
-<div class="row">
-    <div class="col-6">
-        <h2 class="mt-5 mb-5 bg-light">Ajouter un article</h2>
-        <form [formGroup]="articleForm" (ngSubmit)="onAjouterArticle()">
-            <div class="form-group">
-                <button class="btn btn-success mb-3" type="button" (click)="filePicker.click()">Ajouter une image</button>
-                <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
-                <div class="image-preview" >
-                    <img id="" [src]="imageUrl" alt="">
+<div class="container">
+    <div class="row justify-content-center" id="bloc_ajouter_article">
+        <div class="col-12 col-md-9">
+            <h2 class="mt-5 mb-5 bg-light">Ajouter un article</h2>
+            <form [formGroup]="articleForm" (ngSubmit)="onAjouterArticle()">
+                <div class="form-group">
+                    <button class="btn btn-success mb-3" type="button" (click)="filePicker.click()">Ajouter une image</button>
+                    <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
+                    <div class="image-preview" >
+                        <img id="" [src]="imageUrl" alt="">
+                    </div>
                 </div>
-            </div>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">Texte</div>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">Texte</div>
+                    </div>
+                    <textarea rows="10" type="text-area" id="texte" class="form-control" formControlName="texte"></textarea>
                 </div>
-                <textarea rows="10" type="text-area" id="texte" class="form-control" formControlName="texte"></textarea>
-            </div>
-            <button class="btn btn-success btn-lg mt-5 mb-5" 
-                    type="submit" 
-                    [disabled]="articleForm.invalid || msgErreur != null">
-                    Valider l'article
-            </button>
-            <button class="btn btn-danger btn-lg mt-5 mb-5 ml-2" 
-                    type="button" 
-                    *ngIf="msgErreur != null" 
-                    (click)="onResetForm()">
-                    Effacer
-            </button>
-            <p class="text-danger mt-4 ml-3 mb-5" *ngIf="msgErreur != null">{{ msgErreur }}</p>
-        </form>
+                <div id="boutons_ajouter_article">
+                    <button class="btn btn-success btn-lg-lg mt-4 mb-3" 
+                            type="submit" 
+                            [disabled]="articleForm.invalid || msgErreur != null">
+                            Valider l'article
+                    </button>
+                    <button class="btn btn-danger btn-lg-lg mt-4 mb-3 ml-2" 
+                            type="button" 
+                            *ngIf="msgErreur != null" 
+                            (click)="onResetForm()">
+                            Effacer
+                    </button>
+                </div>
+                <p class="text-danger" *ngIf="msgErreur != null">{{ msgErreur }}</p>
+            </form>
+        </div>
     </div>
 </div>

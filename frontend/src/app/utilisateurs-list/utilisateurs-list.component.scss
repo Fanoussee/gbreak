@@ -1,0 +1,30 @@
+h2 {
+    @media screen and (max-width: 576px) {
+        font-size: 1.6em;
+    }
+}
+
+.bloc_utilisateur {
+    @media screen and (max-width: 575px) {
+
+        display: flex;
+        flex-direction: column;
+
+        .infos_util {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .btn_suppr_util {
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+
+.btn_suppr_util {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

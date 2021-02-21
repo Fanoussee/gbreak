@@ -57,14 +57,18 @@ export class SingleCommentaireComponent implements OnInit {
       this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
         () => {
           const texte = this.modifyCommentForm.get("modifyComment").value;
-          this.commentairesServices.modifyCommentaire(this.commentaire.uuid_commentaire, texte).subscribe(
-            () => {
-              this.router.navigate(["/articles"]);
-            },
-            (error) => {
-              this.msgErreur = error;
-            }
-          );
+          if(this.donneesValides(texte)){
+            this.commentairesServices.modifyCommentaire(this.commentaire.uuid_commentaire, texte).subscribe(
+              () => {
+                this.router.navigate(["/articles"]);
+              },
+              (error) => {
+                this.msgErreur = error;
+              }
+            );
+          }else{
+            this.msgErreur = "Le texte doit contenir au moins deux caractères.";
+          }
         },
         (error) => {
           window.alert(error.error.erreur);
@@ -101,6 +105,22 @@ export class SingleCommentaireComponent implements OnInit {
     } else {
       window.alert("Vous n'avez pas le droit d'accéder à cette application.");
       this.authService.deconnexion();
+    }
+  }
+
+  private donneesValides(texte: string) {
+    if (texte == null) {
+      return false;
+    } else {
+      return this.verifTailleString(texte, 2);
+    }
+  }
+
+  private verifTailleString(texte: string, taille: number) {
+    if (texte.length >= taille) {
+      return true;
+    } else {
+      return false;
     }
   }
 

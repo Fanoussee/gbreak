@@ -1,0 +1,13 @@
+.input-group {
+    @media screen and (max-width: 400px) {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.form-control {
+    @media screen and (max-width: 400px) {
+        width: 100%;
+    }
+}

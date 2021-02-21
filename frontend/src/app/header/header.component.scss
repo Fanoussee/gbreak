@@ -1,6 +1,36 @@
-#moderateur {
-    color: red;
-    font-weight: bold;
-    font-style: italic;
-    font-size: 1em;
+img {
+    width : 170px;
+    @media screen and (max-width: 575px) {
+        width: 100px;
+    }
+}
+
+nav {
+    @media screen and (max-width: 575px) {
+        display: flex;
+    }
+
+}
+
+#logo_titre {
+}
+
+h1 {
+    @media screen and (max-width: 575px) {
+        font-size: 1.4em;
+        font-weight: bold;
+    }
+}
+
+#prenom_moderateur {
+    @media screen and (max-width: 575px) {
+        display: none;
+    }
+}
+
+#inscription_connexion {
+    @media screen and (max-width: 575px) {
+        display: flex;
+        justify-content: space-between;
+    }
 }

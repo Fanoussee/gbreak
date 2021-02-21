@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Commentaire } from '../models/Commentaire.model';
 import { CommentairesService } from '../services/commentaires.service';
-import { faAngleRight, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { UtilisateursService } from '../services/utilisateurs.service';
 import { Utilisateur } from '../models/Utilisateur.model';
 import { AuthService } from '../services/auth.service';
@@ -16,6 +16,7 @@ export class CommentaireComponent implements OnInit {
 
   faAngleRight = faAngleRight;
   faCheckCircle = faCheckCircle;
+  faTimesCircle = faTimesCircle;
 
   newCommentForm: FormGroup;
 
@@ -69,16 +70,21 @@ export class CommentaireComponent implements OnInit {
     if(uuid_util){
       this.utilisateursServices.getUtilisateurById(uuid_util).subscribe(
         () => {
-          let newCommentaire: Commentaire = new Commentaire(
-            uuid_util,
-            this.newCommentForm.get("newComment").value
-          );
-          newCommentaire.uuid_article = this.uuid_article;
-          this.commentairesServices.ajouterCommentaire(newCommentaire).subscribe(
-            () => {
-              this.ngOnInit();
-            }
-          );
+          const texte = this.newCommentForm.get("newComment").value;
+          if(this.donneesValides(texte)){
+            let newCommentaire: Commentaire = new Commentaire(
+              uuid_util,
+              texte
+            );
+            newCommentaire.uuid_article = this.uuid_article;
+            this.commentairesServices.ajouterCommentaire(newCommentaire).subscribe(
+              () => {
+                this.ngOnInit();
+              }
+            );
+          }else{
+            this.msgErreur = "Le texte doit contenir au moins deux caractères.";
+          }
         },
         (error) => {
           window.alert(error.error.erreur);
@@ -88,6 +94,26 @@ export class CommentaireComponent implements OnInit {
     }else{
       window.alert("Vous n'avez pas le droit d'accéder à cette application.");
       this.authService.deconnexion();
+    }
+  }
+
+  onAnnulation(){
+    this.msgErreur = null;
+  }
+
+  private donneesValides(texte: string) {
+    if (texte == null) {
+      return false;
+    } else {
+      return this.verifTailleString(texte, 2);
+    }
+  }
+
+  private verifTailleString(texte: string, taille: number) {
+    if (texte.length >= taille) {
+      return true;
+    } else {
+      return false;
     }
   }
 

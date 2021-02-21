@@ -1,15 +1,24 @@
-<div class="row mt-5" *ngIf="moderateur === 1">
-    <div class="col-12">
-        <h2 class="m-4 text-center  bg-light">Liste des utilisateurs</h2>
+<div class="row mt-4 justify-content-center" *ngIf="moderateur === 1">
+    <div class="col-12 col-lg-9">
+        <h2 class="mb-4 mr-0 text-center bg-light">Liste des utilisateurs</h2>
         <div class="row justify-content-center mb-2" *ngFor="let utilisateur of utilisateurs; let i = index">
-            <div class="col-6">
-                <div class="row bg-light">
-                    <div class="col-9">
-                        <p><strong>Prénom /Nom : </strong>{{ utilisateur.prenom }} {{ utilisateur.nom }}</p>
-                        <p><strong>Date de naissance : </strong>{{ utilisateur.date_naiss | date : 'dd/MM/yyyy'}}</p>
-                        <p><strong>Email : </strong>{{ utilisateur.email }}</p>
+            <div class="col-11 col-lg-11">
+                <div class="row bg-light bloc_utilisateur border">
+                    <div class="col-12 col-sm-9">
+                        <div class="d-flex infos_util mt-4">
+                            <p class="font-weight-bold mr-lg-2">Prénom /Nom : </p>
+                            <p> {{ utilisateur.prenom }} {{ utilisateur.nom }}</p>
+                        </div>
+                        <div class="d-flex infos_util">
+                            <p class="font-weight-bold mr-2">Date de naissance : </p>
+                            <p> {{ utilisateur.date_naiss | date : 'dd/MM/yyyy'}}</p>
+                        </div>
+                        <div class="d-flex infos_util">
+                            <p class="font-weight-bold mr-2">Email : </p>
+                            <p> {{ utilisateur.email }}</p>
+                        </div>
                     </div>
-                    <div class="col-3 d-flex justify-content-end align-items-center">
+                    <div class="col-sm-3 mb-4 mb-sm-0 btn_suppr_util">
                         <button class="btn btn-danger" (click)="onDeleteUtilisateur(i)">Supprimer</button>
                     </div>
                 </div>

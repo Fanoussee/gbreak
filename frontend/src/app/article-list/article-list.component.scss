@@ -1,0 +1,47 @@
+.row {
+    @media screen and (max-width : 991px) {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+}
+
+button {
+    @media screen and (min-width: 992px) {
+        position: fixed;
+    }
+}
+
+h2 {
+    @media screen and (max-width : 767px) {
+        visibility: hidden;
+    }
+}
+
+#noms_date {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    @media screen and (max-width : 575px) {
+        display: flex;
+        flex-direction: column;
+        & #noms {
+            margin-bottom: 8px;
+        }
+    }
+
+    & div {
+        @media screen and (max-width : 575px) {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+#ligne_commentaire {
+    @media screen and (max-width : 991px) {
+        display: flex;
+        flex-direction: row;
+    }
+
+}
