@@ -179,6 +179,7 @@ export class SingleArticleComponent implements OnInit {
   }
 
   private modifArticle(article: Article, image: File) {
+    console.log(this.route.snapshot.params['uuid_article']);
     this.articleService.modifyArticle(article, image).subscribe(
       () => {
         this.router.navigate(['/articles']);

@@ -194,7 +194,9 @@ exports.modifyArticle = function (req, res) {
                 const photoArticleOrigine = rows[0].photo;
                 if (fichierImage != null) {
                     values = { texte, photo: fichierImage };
-                    deleteImage(photoArticleOrigine);
+                    if(photoArticleOrigine != null){
+                        deleteImage(photoArticleOrigine);
+                    }
                 } else if (photoArticleModifie == photoArticleOrigine) {
                     values = { texte };
                 } else if (photoArticleModifie == null && photoArticleOrigine != null) {
