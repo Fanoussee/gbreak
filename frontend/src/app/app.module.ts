@@ -30,8 +30,8 @@ const appRoutes : Routes = [
   { path: 'profil', canActivate: [AuthGuard], component: SingleUtilisateurComponent },
   { path: 'connexion', component: ConnexionComponent },
   { path: 'inscription', component: InscriptionComponent },
-  { path: '', component: ConnexionComponent },
-  { path: '**', component: ConnexionComponent }
+  { path: '', component: ArticleListComponent },
+  { path: '**', component: ArticleListComponent }
 ];
 
 @NgModule({

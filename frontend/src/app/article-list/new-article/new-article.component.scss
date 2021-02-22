@@ -12,7 +12,7 @@ input[type="file"] {
 
 .image-preview {
   img {
-    max-width: 100%;
+    width: 100%;
   }
 }
 
@@ -32,4 +32,8 @@ input[type="file"] {
 #boutons_ajouter_article {
   display: flex;
   flex-direction: row;
+}
+
+.color-dark {
+  color : rgb(4,4,4);
 }

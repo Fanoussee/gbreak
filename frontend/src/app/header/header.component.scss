@@ -1,40 +1,61 @@
 img {
-    width : 170px;
-    @media screen and (max-width: 575px) {
+    width: 170px;
+
+    @media screen and (max-width: 991px) {
         width: 100px;
     }
 }
 
 nav {
-    @media screen and (max-width: 575px) {
+    @media screen and (max-width: 991px) {
         display: flex;
+        flex-direction: column;
+
+        & #logo_titre {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            & h1 {
+                font-size: 1.4em;
+                margin: 0px;
+            }
+        }
+
+        & .inscr_connex, ul {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        & .compte_util {
+            //width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        & button {
+            position: fixed;
+            right: 15px;
+            top: 70px;
+        }
     }
 
-}
+    & .grandeTailleTexte {
+        font-size: 1.8em;
 
-#lien_actif {
-    color: rgb(4,4,4);
-    :active {
-        background-color: white;
+        @media screen and (max-width: 991px) {
+            font-size: 1em;
+        }
     }
-}
 
-h1 {
-    @media screen and (max-width: 575px) {
-        font-size: 1.4em;
-        font-weight: bold;
-    }
-}
-
-#prenom_moderateur {
-    @media screen and (max-width: 575px) {
-        display: none;
-    }
-}
-
-#inscription_connexion {
-    @media screen and (max-width: 575px) {
-        display: flex;
-        justify-content: space-between;
+    & .disparition {
+        @media screen and (max-width: 991px) {
+            display: none;
+        }
     }
 }
