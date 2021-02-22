@@ -50,7 +50,7 @@ Afin de pouvoir exécuter l'application, il faut avoir installer :
 
 ### Backend
 - Ouvrir un terminal sur le dossier backend
-- Exécuter le serveur en tapant : nodemon server
+- Exécuter le serveur en tapant : npm start
 
 ### Frontend
 - Ouvrir un terminal sur le dossier frontend
