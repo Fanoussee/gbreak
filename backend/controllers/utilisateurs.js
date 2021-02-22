@@ -164,7 +164,7 @@ exports.createUser = function (req, res) {
  */
 exports.getAllUsers = function (req, res) {
     const sql = 
-        "SELECT nom, prenom, date_naiss, email " +
+        "SELECT uuid_util, nom, prenom, date_naiss, email " +
         "FROM Utilisateur " +
         "WHERE id_util != 0 AND id_util != 1 "+
         "ORDER BY nom";
