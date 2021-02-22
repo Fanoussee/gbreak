@@ -5,13 +5,13 @@
             <p class="font-weight-bold mt-sm-3 mr-md-2 flex-grow">
                 {{ infosUtilActif.prenom }} {{ infosUtilActif.nom }}
             </p>
-            <textarea class="flex-grow-1 mr-md-2" type="textarea" name="commentaire" id="commentaire"
+            <textarea aria-label="commentaire" class="flex-grow-1 mr-md-2" type="textarea" name="commentaire" id="commentaire"
                 formControlName="newComment"></textarea>
             <button class="btn btn-success flex-grow" type="button" (click)="onAjouterCommentaire()"
-                [disabled]="msgErreur != null">
+                [disabled]="msgErreur != null" aria-label="Valider le commentaire">
                 <fa-icon [icon]="faCheckCircle" class="flex-grow"></fa-icon>
             </button>
-            <button class="btn btn-danger ml-lg-2 flex-grow" type="button" (click)="onAnnulation()"
+            <button aria-label="Annuler la modification" class="btn btn-danger ml-lg-2 flex-grow" type="button" (click)="onAnnulation()"
                 *ngIf="msgErreur != null">
                 <fa-icon [icon]="faTimesCircle" class="flex-grow"></fa-icon>
             </button>

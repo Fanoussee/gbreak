@@ -12,6 +12,13 @@ nav {
 
 }
 
+#lien_actif {
+    color: rgb(4,4,4);
+    :active {
+        background-color: white;
+    }
+}
+
 h1 {
     @media screen and (max-width: 575px) {
         font-size: 1.4em;

@@ -7,6 +7,7 @@
 }
 
 button {
+    color: rgb(30,30,30);
     @media screen and (min-width: 992px) {
         position: fixed;
     }
@@ -39,6 +40,7 @@ h2 {
 }
 
 #ligne_commentaire {
+    color: rgb(4,4,4);
     @media screen and (max-width : 991px) {
         display: flex;
         flex-direction: row;

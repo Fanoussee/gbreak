@@ -2,10 +2,13 @@
     <div class="row align-items-center" *ngIf="!modify" id="boutons_card">
         <div class="col-12 col-lg-3 mt-3" *ngIf="rightToModify || rightToDelete" id="boutons_single_article">
             <div class="d-flex flex-column">
-                <button class="btn btn-primary mb-3" *ngIf="rightToModify" (click)="onChangeModify()">
+                <button 
+                    class="btn btn-primary mb-3 color-dark" 
+                    *ngIf="rightToModify" 
+                    (click)="onChangeModify()">
                     Modifier l'article
                 </button>
-                <button class="btn btn-danger mb-3" *ngIf="rightToDelete" (click)="onDeleteArticle()">
+                <button class="btn btn-danger mb-3 color-dark" *ngIf="rightToDelete" (click)="onDeleteArticle()">
                     Supprimer l'article
                 </button>
             </div>
@@ -19,16 +22,16 @@
                     <div class="col-lg-6 border-right bg-light">
                         <div class="card-body">
                             <p class="card-text font-italic">
-                                <small class="text-muted">
+                                <small>
                                     Le {{ article.date_heure | date :'dd/MM/yyyy à hh:mm'}}
                                 </small>
                             </p>
-                            <p class="text-dark text-justify font-weight-bold">{{ article.texte }}</p>
+                            <p class="text-dark font-weight-bold">{{ article.texte }}</p>
                             <p class="card-title text-right">
                                 {{ article.prenom }} {{ article.nom }}
                             </p>
                             <p class="card-text border-top">
-                                <small class="text-muted">
+                                <small>
                                     Commentaires : {{ article.nb_commentaires }}
                                 </small>
                             </p>
@@ -37,7 +40,7 @@
                     <div class="col-lg-6 text-center align-text-bottom">
                         <p class="font-italic mt-4" *ngIf="article.photo == null">L'article n'a pas de photo !</p>
                         <fa-icon [icon]="faImage" class="fa-5x text-primary" *ngIf="article.photo == null"></fa-icon>
-                        <img class="card-img" src="{{ article.photo }}" alt="">
+                        <img class="card-img" src="{{ article.photo }}" alt="La photo de l'article">
                     </div>
                 </div>
             </div>
@@ -56,9 +59,9 @@
             <div class="card">
                 <form [formGroup]="articleForm">
                     <div class="form-group">
-                        <img class="card-img-top" *ngIf="imageUrl == null" src="{{ article.photo }}" alt="">
+                        <img class="card-img-top" *ngIf="imageUrl == null" src="{{ article.photo }}" alt="La photo de l'article">
                     </div>
-                    <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
+                    <button class="btn btn-success btn-block btn-lg color-dark" type="button" (click)="filePicker.click()"
                         *ngIf="article.photo != null">
                         Modifier l'image
                     </button>
@@ -66,20 +69,23 @@
                         *ngIf="article.photo != null">
                         Supprimer l'image
                     </button>
-                    <button class="btn btn-success btn-block btn-lg" type="button" (click)="filePicker.click()"
+                    <button class="btn btn-success btn-block btn-lg color-dark" type="button" (click)="filePicker.click()"
                         *ngIf="article.photo == null">
                         Ajouter une image
                     </button>
                     <div class="form-group">
-                        <input type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
+                        <input aria-label="Emplacement pour une nouvelle image" type="file" id="filePicker" #filePicker (change)="onFileSelected($event, $event.target.files)">
                         <div class="image-preview" *ngIf="imageUrl != null">
-                            <img id="" [src]="imageUrl" alt="">
+                            <img [src]="imageUrl" alt="La photo de l'article">
                         </div>
                     </div>
-                    <textarea rows="10" class="form-control mt-4 mb-4" type="text-area" id="texteModifie" formControlName="texteModifie">
+                    <textarea aria-label="Texte de l'article" rows="10" class="form-control mt-4 mb-4" type="text-area" id="texteModifie" formControlName="texteModifie">
                     </textarea>
-                    <button type="submit" class="btn btn-primary btn-block btn-lg" (click)="onModifyArticle()">Modifier
-                        l'article</button>
+                    <button type="submit" 
+                        class="btn btn-primary btn-block btn-lg color-dark" 
+                        (click)="onModifyArticle()">
+                        Modifier l'article
+                    </button>
                 </form>
             </div>
             <div class="row">

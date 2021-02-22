@@ -1,23 +1,30 @@
-<div class="d-flex mt-2 mb-2 justify-content-center commentaire" *ngIf="!modify" >
+<div class="d-flex mt-2 mb-2 align-items-center justify-content-center commentaire" *ngIf="!modify">
     <fa-icon [icon]="faAngleRight" class="flex-grow mr-2 mt-3 faAngleRight"></fa-icon>
     <p class="align-text-bottom flex-grow mr-md-2 mt-3 font-weight-bold">
         {{ commentaire.prenom }} {{ commentaire.nom }}
     </p>
-    <p id="texte_commentaire" class="flex-grow-1 mt-md-3 mr-md-4 ml-md-4 text-justify align-text-bottom">
+    <p id="texte_commentaire" class="flex-grow-1 mt-md-3 mr-md-4 ml-md-4 align-text-bottom">
         <span id="tiret_avant_commentaire">- </span>{{ commentaire.commentaire }}
     </p>
     <p class="flex-grow font-italic text-secondary mt-md-3">
         {{ commentaire.date_commentaire | date: "dd/MM/yyyy - hh:mm a" }}
     </p>
-    <button class="btn btn-primary ml-md-2" type="button" *ngIf="commentaire.uuid_util == infosUtilActif.uuid_util"
-        (click)="onChangeModify()">
-        <fa-icon [icon]="faPenSquare"></fa-icon>
-    </button>
-    <button class="btn btn-danger ml-md-2 mr-md-2" type="button"
-        *ngIf="commentaire.uuid_util == infosUtilActif.uuid_util || infosUtilActif.moderateur == 1"
-        (click)="onDeleteCommentaire()">
-        <fa-icon [icon]="faTimesCircle"></fa-icon>
-    </button>
+    <div>
+        <fa-icon 
+            [icon]="faPenSquare" 
+            class="btn btn-primary ml-md-2" 
+            type="button"
+            *ngIf="commentaire.uuid_util == infosUtilActif.uuid_util" 
+            (click)="onChangeModify()">
+        </fa-icon>
+        <fa-icon 
+            [icon]="faTimesCircle" 
+            class="btn btn-danger ml-md-2 mr-md-2"
+            type = "button"
+            *ngIf="commentaire.uuid_util == infosUtilActif.uuid_util || infosUtilActif.moderateur == 1"
+            (click)="onDeleteCommentaire()">
+        </fa-icon>
+    </div>
 </div>
 
 <form [formGroup]="modifyCommentForm" *ngIf="modify">
@@ -30,16 +37,27 @@
             class="flex-grow-1 mr-md-2" 
             type="text" 
             name="commentaire" 
-            id="commentaire" 
-            formControlName="modifyComment">
+            id="commentaire"
+            formControlName="modifyComment" 
+            aria-label="Emplacement pour modifier le commentaire existant">
         </textarea>
-        <button class="btn btn-success flex-grow mr-md-2" type="button" (click)="onModifyCommentaire()"
-        [disabled]="msgErreur != null">
-            <fa-icon [icon]="faCheckCircle" class="flex-grow"></fa-icon>
-        </button>
-        <button class="btn btn-danger flex-grow" type="button" (click)="onChangeModify()">
-            <fa-icon [icon]="faTimesCircle" class="flex-grow"></fa-icon>
-        </button>
+        <div>
+            <fa-icon 
+                [icon]="faCheckCircle" 
+                class="btn btn-success flex-grow mr-md-2" 
+                type="button"
+                (click)="onModifyCommentaire()" 
+                [disabled]="msgErreur != null" 
+                aria-label="valider le commentaire">
+            </fa-icon>
+            <fa-icon 
+                [icon]="faTimesCircle" 
+                class="btn btn-danger flex-grow" 
+                type="button" 
+                (click)="onChangeModify()" 
+                aria-label="annuler la modification du commentaire">
+            </fa-icon>
+        </div>
     </div>
     <p class="text-danger font-weigth-bold">{{ msgErreur }}</p>
 </form>

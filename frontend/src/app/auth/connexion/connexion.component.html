@@ -6,18 +6,36 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">Adresse mail</div>
                 </div>
-                <input size="300" type="email" id="email" class="form-control" formControlName="email">
+                <input 
+                    aria-label="Adresse email" 
+                    size="300" 
+                    type="email" 
+                    id="email" 
+                    class="form-control" 
+                    formControlName="email">
             </div>
             <div class="input-group mt-4">
                 <div class="input-group-prepend">
                     <div class="input-group-text">Mot de passe</div>
                 </div>
-                <input type="password" id="mot_passe" class="form-control" formControlName="mot_passe">
+                <input 
+                    aria-label="Mot de passe" 
+                    type="password" 
+                    id="mot_passe" 
+                    class="form-control" 
+                    formControlName="mot_passe">
             </div>
-            <button type="submit" class="btn btn-success btn-lg mt-5" [disabled]="connexionForm.invalid || msgErreur != null">
+            <button 
+                type="submit" 
+                class="btn btn-success btn-lg mt-5 color-dark" 
+                [disabled]="connexionForm.invalid || msgErreur != null">
                 Se connecter
             </button>
-            <button class="btn btn-danger btn-lg mt-5 ml-2" type="button" *ngIf="msgErreur != null" (click)="onResetForm()">
+            <button 
+                class="btn btn-danger btn-lg mt-5 ml-2" 
+                type="button" 
+                *ngIf="msgErreur != null" 
+                (click)="onResetForm()">
                 Effacer
             </button>
         </form>
