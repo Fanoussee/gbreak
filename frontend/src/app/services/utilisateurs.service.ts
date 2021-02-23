@@ -22,10 +22,6 @@ export class UtilisateursService {
     return this.http.get<Utilisateur>(this.urlUtilisateurs + "/" + uuid_util);
   }
 
-  modifyUtilisateur(uuid_util: string, values: any){
-    return this.http.put(this.urlUtilisateurs + "/" + uuid_util, values);
-  }
-
   deleteUtilisateur(uuid_util: string){
     return this.http.delete(this.urlUtilisateurs + "/" + uuid_util);
   }

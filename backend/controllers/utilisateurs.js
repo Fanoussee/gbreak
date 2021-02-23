@@ -213,55 +213,6 @@ exports.getOneUser = function (req, res) {
     });
 };
 
-//UPDATE------------------------------------------------------------------------------------------
-
-//------------------------------------------------------------------à revoir----------------------
-
-/**
- * Cette fonction permet de modifier les informations d'un utilisateur à l'aide de son uuid.
- * @param {*} req La requête reçue
- * @requires uuid_util
- * @param {*} res La réponse à envoyer
- * @returns
- * Un objet : { message: "modifyOneUser - L'utilisateur a été modifié !" }
- * ou un objet : { erreur: texte de l'erreur }
- */
-exports.modifyOneUser = function (req, res) {
-    const uuidUtil = req.params.id;
-    console.log(uuidUtil);
-    const sql1 = 'SELECT * FROM Utilisateur WHERE uuid_util=?';
-    const sql2 = 'UPDATE Utilisateur SET ? WHERE uuid_util=?';
-    let idUserToModify = 0;
-    const values = req.body;
-    console.log(values);
-    connexion.query(sql1, [uuidUtil], function (err, rows, fields) {
-        if (err) {
-            res.status(500).json({ erreur: "La requête est incorrecte !" });
-        } else {
-            try {
-                idUserToModify = rows[0].uuid_util;
-                if (idUserToModify == uuidUtil) {
-                    bcrypt.hash(values.mot_passe, 10)
-                        .then(function (hash) {
-                            values.mot_passe = hash;
-                            connexion.query(sql2, [values, uuidUtil], function (err, rows, fields) {
-                                if (err) {
-                                    res.status(500).json({ erreur: "La requête est incorrecte !" });
-                                } else {
-                                    res.status(200).json({ message: "Utilisateur modifié !" });
-                                }
-                            });
-                        }).catch(function (error) {
-                            res.status(500).json({ erreur: error });
-                        });
-                }
-            } catch (error) {
-                res.status(500).json({ erreur: "L'utilisateur n'existe pas !" });
-            }
-        }
-    });
-};
-
 //DELETE------------------------------------------------------------------------------------------
 
 /**

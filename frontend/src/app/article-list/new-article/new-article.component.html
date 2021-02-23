@@ -1,24 +1,36 @@
 <div class="container">
     <div class="row justify-content-center" id="bloc_ajouter_article">
         <div class="col-12 col-md-9">
+
             <h2 class="mt-5 mb-5 bg-light">Ajouter un article</h2>
+
             <form [formGroup]="articleForm" (ngSubmit)="onAjouterArticle()">
                 <div class="form-group">
-                    <button class="btn btn-success mb-3 color-dark" type="button" (click)="filePicker.click()">Ajouter une image</button>
+
+                    <button 
+                        class="btn btn-success mb-3 color-dark" 
+                        type="button" 
+                        (click)="filePicker.click()">
+                        Ajouter une image
+                    </button>
+
                     <input 
                         type="file" 
                         id="filePicker" 
                         #filePicker 
                         (change)="onFileSelected($event, $event.target.files)"
                         aria-label="L'emplacement pour une nouvelle image">
+
                     <div class="image-preview" >
                         <img id="" [src]="imageUrl" alt="Votre image apparaîtra ici">
                     </div>
                 </div>
+
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <div class="input-group-text">Texte</div>
                     </div>
+
                     <textarea 
                         rows="10" 
                         type="text-area" 
@@ -28,20 +40,25 @@
                         aria-label="Le texte de l'article">
                     </textarea>
                 </div>
+
                 <div id="boutons_ajouter_article">
                     <button class="btn btn-success btn-lg-lg mt-4 mb-3 color-dark" 
                             type="submit" 
                             [disabled]="articleForm.invalid || msgErreur != null">
                             Valider l'article
                     </button>
+
                     <button class="btn btn-danger btn-lg-lg mt-4 mb-3 ml-2" 
                             type="button" 
                             *ngIf="msgErreur != null" 
                             (click)="onResetForm()">
                             Effacer
                     </button>
+
                 </div>
+
                 <p class="text-danger" *ngIf="msgErreur != null">{{ msgErreur }}</p>
+                
             </form>
         </div>
     </div>

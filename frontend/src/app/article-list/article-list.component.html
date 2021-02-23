@@ -1,24 +1,34 @@
 <div class="row">
     <div class="col-12 col-lg-9">
-        <!-- Affichage des articles -->
+
         <h2 class="mt-md-5 mb-md-5 bg-light">Liste des articles</h2>
+
         <div class="mb-5" *ngFor="let article of articles; let i = index">
             <div class="card bg-light" [routerLink]="[article.uuid_article]">
-                <img class="card-img-top" *ngIf="article.photo != null" src="{{ article.photo }}"
+
+                <img 
+                    class="card-img-top" 
+                    *ngIf="article.photo != null" 
+                    src="{{ article.photo }}" 
                     alt="La photo de l'article">
+
                 <div class="card-body">
                     <div class="card-title justify-content-between">
                         <div class="row" id="noms_date">
+
                             <div class="text-center ml-3 mr-3" id="noms">Créé par :
                                 <span class="font-weight-bold">
                                     {{ article.prenom }} {{ article.nom }}
                                 </span>
                             </div>
+
                             <div class="font-italic text-center text-md-right ml-3 mr-3" id="date">
                                 {{ article.date_heure | date :'dd/MM/yyyy à hh:mm a'}}
                             </div>
+
                         </div>
                     </div>
+
                     <div [ngClass]="{'card-text': true,
                                          'border-top': article.texte != null,
                                          'border-info': true }">
@@ -27,23 +37,29 @@
                         </p>
                     </div>
 
-                    <!-- Affichage du nombre de commentaires par article -->
                 </div>
                 <div class="row bg-primary m-0" id="ligne_commentaire">
                     <div class="col-9 mt-3 font-weight-bold">
+
                         <p>Commentaires : {{ article.nb_commentaires }}</p>
+
                     </div>
+
                     <div class="col-3 text-right mt-lg-1">
                         <fa-icon [icon]="faArrowRight" class="fa-2x"></fa-icon>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+
     <div class="col-12 col-lg-3 mt-4 text-center text-lg-left">
         <button class="mt-4 btn btn-success btn-lg" routerLink="new">
             Ajouter un article
         </button>
     </div>
+
 </div>
+
 <p>{{ msgErreur }}</p>

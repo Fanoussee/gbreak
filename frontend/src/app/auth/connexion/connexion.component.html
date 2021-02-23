@@ -1,11 +1,16 @@
 <div class="row justify-content-center">
     <div class="col-12 col-md-8">
+
         <h2 class="mt-5 mb-5 bg-light">Se connecter</h2>
+
         <form [formGroup]="connexionForm" (ngSubmit)="onConnexion()">
             <div class="input-group">
                 <div class="input-group-prepend">
+
                     <div class="input-group-text">Adresse mail</div>
+
                 </div>
+
                 <input 
                     aria-label="Adresse email" 
                     size="300" 
@@ -13,24 +18,31 @@
                     id="email" 
                     class="form-control" 
                     formControlName="email">
+
             </div>
             <div class="input-group mt-4">
                 <div class="input-group-prepend">
+
                     <div class="input-group-text">Mot de passe</div>
+
                 </div>
+
                 <input 
                     aria-label="Mot de passe" 
                     type="password" 
                     id="mot_passe" 
                     class="form-control" 
                     formControlName="mot_passe">
+
             </div>
+
             <button 
                 type="submit" 
                 class="btn btn-success btn-lg mt-5 color-dark" 
                 [disabled]="connexionForm.invalid || msgErreur != null">
                 Se connecter
             </button>
+
             <button 
                 class="btn btn-danger btn-lg mt-5 ml-2" 
                 type="button" 
@@ -38,7 +50,10 @@
                 (click)="onResetForm()">
                 Effacer
             </button>
+
         </form>
+
         <p class="text-danger mt-3" *ngIf="msgErreur != null">{{ msgErreur }}</p>
+        
     </div>
 </div>

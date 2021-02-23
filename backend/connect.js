@@ -3,14 +3,16 @@
  */
 const mysql = require('mysql');
 
+//require('dotenv').config();
+
 /**
  * Création d'une connexion avec la base de données MySQL
  */
 const connexion = mysql.createConnection({
-    host: process.env.DB_HOST,
+    host: "localhost",
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DATABASE
+    database: "gbreak"
 });
 
 /**

@@ -21,7 +21,6 @@ router.post("/connexion", ctrlUtilisateur.connectUser);
 router.post("/inscription", ctrlUtilisateur.createUser);
 router.get("/", auth, ctrlUtilisateur.getAllUsers);
 router.get("/:id", auth, ctrlUtilisateur.getOneUser);
-router.put("/:id", auth, ctrlUtilisateur.modifyOneUser);
 router.delete("/:id", auth, ctrlUtilisateur.deleteOneUser);
 
 /**

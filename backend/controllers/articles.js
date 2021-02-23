@@ -74,7 +74,8 @@ exports.createArticle = function (req, res) {
                         [idUtil, dateCreation, photo, texte, uuidUtil, uuidArticle], 
                         function (err, rows, fields) {
                             if (err) {
-                                res.status(500).json({ erreur: "La requête createArticle-CreationArticle est incorrecte !" });
+                                res.status(500).json({
+                                    erreur: "La requête createArticle-CreationArticle est incorrecte !" });
                             } else {
                                 res.status(200).json({ message: "createArticle - L'article a été ajouté !" });
                             }
