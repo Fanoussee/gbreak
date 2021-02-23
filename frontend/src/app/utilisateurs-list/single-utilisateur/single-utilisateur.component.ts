@@ -30,8 +30,13 @@ export class SingleUtilisateurComponent implements OnInit {
       this.utilisateursService.getUtilisateurById(uuid_util).subscribe(
         (utilisateur: Utilisateur) => {
           this.infosUtilisateurActif = utilisateur[0];
-          if (this.infosUtilisateurActif.moderateur == 1) {
-            this.moderateur = true;
+          if(this.infosUtilisateurActif.uuid_util === uuid_util){
+            if (this.infosUtilisateurActif.moderateur == 1) {
+              this.moderateur = true;
+            }
+          }else{
+            window.alert("Vous n'avez pas le droit d'accéder à cette application !");
+            this.authService.deconnexion();
           }
         },
         (error) => {

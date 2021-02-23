@@ -2,12 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
+import { Utilisateur } from "../models/Utilisateur.model";
 
 @Injectable()
 
 export class AuthService {
     private msgErreur = "";
-    urlUtilisateurs = 'http://localhost:3000/api/utilisateurs/connexion';
+    urlUtilisateurs = "http://localhost:3000/api/utilisateurs";
     private infosUtilisateurActif : any;
     prenom: string;
     moderateur: number;
@@ -18,7 +19,7 @@ export class AuthService {
     ) { }
 
     connexion(email, mot_passe) : Observable<any>{
-        this.http.post(this.urlUtilisateurs, { email, mot_passe }).subscribe(
+        this.http.post(this.urlUtilisateurs + "/connexion", { email, mot_passe }).subscribe(
             (infos: any) => {
                 this.infosUtilisateurActif = infos;
             },
@@ -26,7 +27,19 @@ export class AuthService {
                 this.msgErreur = err.error.erreur;
             }
         );
-        return this.http.post<any>(this.urlUtilisateurs, {email, mot_passe});
+        return this.http.post<any>(this.urlUtilisateurs + "/connexion", {email, mot_passe});
+    }
+
+    inscription(utilisateur: Utilisateur) : Observable<any>{
+        this.http.post(this.urlUtilisateurs + "/inscription", utilisateur).subscribe(
+            (infos: any) => {
+                this.infosUtilisateurActif = infos;
+            },
+            (err) => {
+                this.msgErreur = err.error.erreur;
+            }
+        );
+        return this.http.post<any>(this.urlUtilisateurs + "/inscription", utilisateur);
     }
 
     deconnexion() {

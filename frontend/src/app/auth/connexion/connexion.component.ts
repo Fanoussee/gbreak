@@ -63,8 +63,7 @@ export class ConnexionComponent implements OnInit {
 
   private donneesValides(email: string, mot_passe: string) {
     let donneesValides = false;
-    donneesValides = this.verifEmail(email);
-    donneesValides = this.verifMotPasse(mot_passe);
+    donneesValides = this.verifEmail(email) && this.verifMotPasse(mot_passe);
     return donneesValides;
   }
 

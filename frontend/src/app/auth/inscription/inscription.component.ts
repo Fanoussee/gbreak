@@ -46,13 +46,20 @@ export class InscriptionComponent implements OnInit {
     const newUser = new Utilisateur(nom, prenom, date_naiss, moderateur, email, mot_passe);
     if(this.donneesValides(newUser)){
       this.utilisateursService.createUtilisateur(newUser).subscribe(
-        (res: any) => {
-          localStorage.setItem('uuid_util', res.uuid_util);
-          localStorage.setItem('prenom', res.prenom);
-          localStorage.setItem('moderateur', res.moderateur);
-          localStorage.setItem('token', res.token);
-          localStorage.setItem('expiresIn', res.expiresIn);
-          this.router.navigate(['/articles']);
+        () => {
+          this.authService.connexion(email, mot_passe).subscribe(
+            (res: any) => {
+              localStorage.setItem('uuid_util', res.uuid_util);
+              localStorage.setItem('prenom', res.prenom);
+              localStorage.setItem('moderateur', res.moderateur);
+              localStorage.setItem('token', res.token);
+              localStorage.setItem('expiresIn', res.expiresIn);
+              this.router.navigate(['/articles']);
+            },
+            (error) => {
+              this.msgErreur = this.authService.getMsgErreur();
+            }
+          );
         },
         (error) => {
           this.msgErreur = error.error.erreur;
@@ -70,11 +77,12 @@ export class InscriptionComponent implements OnInit {
 
   private donneesValides(utilisateur: Utilisateur) {
     let donneesValides = false;
-    donneesValides = this.verifTailleString(utilisateur.nom, 2);
-    donneesValides = this.verifTailleString(utilisateur.prenom, 2);
-    donneesValides = this.verifMotPasse(utilisateur.mot_passe);
-    donneesValides = this.verifDate(utilisateur.date_naiss);
-    donneesValides = this.verifEmail(utilisateur.email);
+    donneesValides = 
+      this.verifTailleString(utilisateur.nom, 2) &&
+      this.verifTailleString(utilisateur.prenom, 2) &&
+      this.verifMotPasse(utilisateur.mot_passe) &&
+      this.verifDate(utilisateur.date_naiss) &&
+      this.verifEmail(utilisateur.email);
     return donneesValides;
   }
 
@@ -86,13 +94,14 @@ export class InscriptionComponent implements OnInit {
     }
   }
 
-  private verifDate(date_naiss: Date) {
-    const aujourdhui = new Date();
-    let nbMilliSecAuj = aujourdhui.getMilliseconds();
-    let nbMillisecMajeur = 24 * 60 * 60 * 1000 * 365 * 18;
-    const dateMajorite = nbMilliSecAuj - nbMillisecMajeur;
-    const majeur = new Date(dateMajorite);
-    if (date_naiss <= majeur) {
+  private verifDate(date_naiss) {
+    const verifDate_naiss = new Date (date_naiss);
+    let aujourdhui = new Date();
+    const annee = aujourdhui.getFullYear();
+    const mois = aujourdhui.getMonth();
+    const jour = aujourdhui.getDate();
+    const majeur = new Date("" + (annee - 18) + "-" + mois + "-" + jour);
+    if (verifDate_naiss <= majeur) {
       return true;
     } else {
       return false;

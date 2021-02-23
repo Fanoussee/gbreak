@@ -31,7 +31,7 @@ Afin de pouvoir exécuter l'application, il faut avoir installer :
 - Saisir votre mot de passe
 - Créer la database gbreak en tapant : CREATE DATABASE gbreak CHARACTER SET 'utf8';
 - Entrer dans la base de données en tapant : USE gbreak;
-- Importer le fichier script en tapant : SOURCE chemin_vers_fichier/gbreak_save.sql;
+- Importer le fichier script qui se trouve dans le dossier "bdd" en tapant : SOURCE chemin_vers_fichier/gbreak_save.sql;
 
 ### NodeJS
 - Télécharger et installer la version LTS de NodeJS : https://nodejs.org/en/download/

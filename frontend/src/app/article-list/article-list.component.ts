@@ -21,7 +21,7 @@ export class ArticleListComponent implements OnInit {
   articles: Article[];
   msgErreur: string = null;
   nbCommentaires: number ;
-  infosUtilActif: Utilisateur;
+  infosUtilActif = new Utilisateur("", "", null, 0, "", "");
   rightToModify: boolean;
   rightToDelete: boolean;
 
@@ -40,8 +40,8 @@ export class ArticleListComponent implements OnInit {
           this.commentairesServices.getCommentairesByUuidArticle(element.uuid_article).subscribe(
             (commentaires: Commentaire[]) => {
               this.infosUtilActif = this.authService.getInfosUtilActif();
-              element.commentaires = commentaires;
-              element.nb_commentaires = element.commentaires.length;
+                element.commentaires = commentaires;
+                element.nb_commentaires = element.commentaires.length;
             },
             (error) => {
               if(error instanceof HttpErrorResponse) {

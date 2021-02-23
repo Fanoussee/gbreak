@@ -55,17 +55,11 @@
                             *ngIf="article.photo == null">
                         </fa-icon>
 
-                        <img class="card-img" src="{{ article.photo }}" alt="La photo de l'article">
+                        <img class="card-img" src="{{ article.photo }}" alt="">
 
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <div class="row mt-2" *ngIf="msgErreur != null">
-        <div class="col-12">
-                <p class="text-danger">Erreur : {{ msgErreur }}</p>
         </div>
     </div>
     
@@ -82,7 +76,7 @@
                             class="card-img-top" 
                             *ngIf="imageUrl == null" 
                             src="{{ article.photo }}" 
-                            alt="La photo de l'article">
+                            alt="">
                     </div>
 
                     <button class="btn btn-success btn-block btn-lg color-dark" type="button" (click)="filePicker.click()"
@@ -107,7 +101,7 @@
                             #filePicker (change)="onFileSelected($event, $event.target.files)">
 
                         <div class="image-preview" *ngIf="imageUrl != null">
-                            <img [src]="imageUrl" alt="La photo de l'article">
+                            <img [src]="imageUrl" alt="">
                         </div>
 
                     </div>

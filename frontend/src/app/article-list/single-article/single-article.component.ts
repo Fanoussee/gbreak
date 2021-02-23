@@ -136,11 +136,17 @@ export class SingleArticleComponent implements OnInit {
 
   onModifyArticle() {
     const texteModifie = this.articleForm.get('texteModifie').value;
-    let nouvellePhoto = null;
+    if(texteModifie === null) {
+      this.article.texte = null;
+    }else if (texteModifie.length === 0){
+      this.article.texte = null;
+    }else{
+      this.article.texte = texteModifie;
+    }
     if (this.image != null && this.article.photo == null) {
-      nouvellePhoto = this.image.name;
-    } else {
-      this.image = null;
+      this.article.photo = this.image.name;
+    }else if (this.image != null && this.article.photo != null) {
+      this.article.photo = this.image.name;
     }
     this.uuid_util = localStorage.getItem('uuid_util');
     if(this.uuid_util){
@@ -149,7 +155,7 @@ export class SingleArticleComponent implements OnInit {
           const nouvelArticle = this.newArticle(
             this.article.uuid_util,
             this.article.photo,
-            texteModifie);
+            this.article.texte);
           if(this.donneesValides(nouvelArticle)){
             this.modifArticle(nouvelArticle, this.image);
           }else{
@@ -179,7 +185,6 @@ export class SingleArticleComponent implements OnInit {
   }
 
   private modifArticle(article: Article, image: File) {
-    console.log(this.route.snapshot.params['uuid_article']);
     this.articleService.modifyArticle(article, image).subscribe(
       () => {
         this.router.navigate(['/articles']);
